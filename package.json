@@ -3,6 +3,9 @@
 	"description": "An extension for Visual Studio Code that allows you to quickly encode and decode text selections.",
 	"version": "0.0.1",
 	"publisher": "mitchdenny",
+	"displayName": "Encode Decode",
+	"keywords": ["encode", "decode", "base64"],
+	"icon": "ecdc.png",
 	"engines": {
 		"vscode": "0.10.x"
 	},
