@@ -1,7 +1,7 @@
 {
 	"name": "ecdc",
 	"description": "An extension for Visual Studio Code that allows you to quickly encode and decode text selections.",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"publisher": "mitchdenny",
 	"displayName": "Encode Decode",
 	"keywords": ["encode", "decode", "base64"],
@@ -10,8 +10,17 @@
 		"vscode": "0.10.x"
 	},
 	"categories": [
-		"Others"
+		"Other"
 	],
+	"license": "https://github.com/mitchdenny/ecdc/master/LICENSE",
+    "bugs": {
+        "url": "https://github.com/mitchdenny/ecdc/issues"
+    },
+    "homepage": "https://github.com/mitchdenny/ecdc/blob/master/README.md",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mitchdenny/ecdc.git"
+    },
 	"activationEvents": [
 		"onCommand:extension.encodeSelection", "onCommand:extension.decodeSelection"
 	],
