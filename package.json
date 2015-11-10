@@ -10,14 +10,20 @@
 		"Others"
 	],
 	"activationEvents": [
-		"onCommand:extension.sayHello"
+		"onCommand:extension.encodeSelection", "onCommand:extension.decodeSelection"
 	],
 	"main": "./out/extension",
 	"contributes": {
-		"commands": [{
-			"command": "extension.sayHello",
-			"title": "Hello World"
-		}]
+		"commands": [
+			{
+				"command": "extension.encodeSelection",
+				"title": "Encode Selection"
+			},
+			{
+				"command": "extension.decodeSelection",
+				"title": "Decode Selection"
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
