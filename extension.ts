@@ -4,9 +4,13 @@ export function activate(context: vscode.ExtensionContext) {
 
 	var encodeSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.encodeSelection', (textEditor, edit) => {
 		textEditor.edit((editBuilder) => {
-			editBuilder.replace(textEditor.selection, 'Encode');
-		}).then(() => {
-			vscode.window.showInformationMessage('Encoded!');
+			var range = new vscode.Range(textEditor.selection.start, textEditor.selection.end);
+			var text = textEditor.document.getText(range);
+			
+			var buffer = new Buffer(text);
+			var encodedText = buffer.toString('base64');
+			
+			editBuilder.replace(textEditor.selection, encodedText);
 		});
 	});
 	
@@ -14,9 +18,13 @@ export function activate(context: vscode.ExtensionContext) {
 	
 	var decodeSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.decodeSelection', (textEditor, edit) => {
 		textEditor.edit((editBuilder) => {
-			editBuilder.replace(textEditor.selection, 'Decode');
-		}).then(() => {
-			vscode.window.showInformationMessage('Decoded!');
+			var range = new vscode.Range(textEditor.selection.start, textEditor.selection.end);
+			var text = textEditor.document.getText(range);
+			
+			var buffer = new Buffer(text, 'base64');
+			var decodedText = buffer.toString('utf8');
+			
+			editBuilder.replace(textEditor.selection, decodedText);
 		});
 	});
 		
