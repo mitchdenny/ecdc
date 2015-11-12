@@ -1,54 +1,66 @@
-import * as vscode from 'vscode'; 
+import * as vscode from 'vscode';
+var sortby = require('sort-by');
 
 function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit, transform: (input: string) => string) {
-	
-	let updatedSelections: vscode.Selection[] = [];
-	let characterOffset = 0;
-	let lineOffset = 0;
-	
-	for (let selectionIndex = 0; selectionIndex < textEditor.selections.length; selectionIndex++) {
+	let changes = [];
+	textEditor.edit((editBuilder) => {
 		
-		let selection = textEditor.selections[selectionIndex];
-		let range = new vscode.Range(selection.start, selection.end);
-		let input = textEditor.document.getText(range);
-		let output = transform(input);
-		
-		characterOffset = output.length - input.length;
-		
-		edit.replace(selection, output);
-		
-		console.log('selection.start.line = %s', selection.start.line);
-		console.log('selection.start.character = %s', selection.start.character);
-		console.log('selection.end.line = %s', selection.end.line);
-		console.log('selection.end.character = %s', selection.end.character);
-		console.log('characterOffset = %s', characterOffset);
-		console.log('input.length = %s', input.length);
-		console.log('output.length = %s', output.length);
-		console.log('selection.start.character + output.length', selection.start.character + output.length);
-		
-		// BUG?? This code will select five characters.
-		let updatedSelection = new vscode.Selection(
-			selection.start.line,
-			selection.start.character,
-			selection.start.line,
-			8
-		);
+		for (let selectionIndex = 0; selectionIndex < textEditor.selections.length; selectionIndex++) {
 
-		// BUG?? This code will select three characters.
-		let updatedSelection = new vscode.Selection(
-			selection.start.line,
-			selection.start.character,
-			selection.start.line,
-			7
-		);
+			let selection = textEditor.selections[selectionIndex];
+			
+			let range = new vscode.Range(
+				selection.start.line,
+				selection.start.character,
+				selection.end.line,
+				selection.end.character	
+			);
+			
+			let input = textEditor.document.getText(range);
+			let output = transform(input);
+			
+			changes.push({
+				"originalStartLine": selection.start.line,
+				"originalStartCharacter": selection.start.character,
+				"originalEndLine": selection.end.line,
+				"originalEndCharacter": selection.end.character,
+				"originalText": input,
+				"updatedText": output,
+				"characterDelta": output.length - input.length
+			});
+
+			editBuilder.replace(range, output);
+			
+		}
+	}).then(() => {
+
+		let lineOffset = 0;
+		let characterOffset = 0;
+
+		changes.sort(sortby('originalStartLine', 'originalStartCharacter'));
+		let updatedSelections: vscode.Selection[] = [];
 		
-		// PROBLEM?? How do you select 4 characters.
-		// ADDITIONAL INFO: Only appears to happen when
-		// you are replacing a selection that overlaps
-		// the original selection.
-				
-		textEditor.selection = updatedSelection;	
-	}
+		for (let changeIndex = 0; changeIndex < changes.length; changeIndex++) {
+			
+			let change = changes[changeIndex];
+			
+			var updatedSelection = new vscode.Selection(
+				change.originalStartLine + lineOffset,
+				change.originalStartCharacter + characterOffset,
+				change.originalEndLine + lineOffset,
+				change.originalEndCharacter + change.characterDelta	+ characterOffset
+			);
+			
+			lineOffset = lineOffset + change.lineDelta;
+			characterOffset = characterOffset + change.characterDelta;
+			
+			updatedSelections.push(updatedSelection);
+
+		}
+		
+		textEditor.selections = updatedSelections;
+		
+	});
 }
 
 export function activate(context: vscode.ExtensionContext) {

@@ -1,51 +1,60 @@
 {
-	"name": "ecdc",
-	"description": "An extension for Visual Studio Code that allows you to quickly encode and decode text selections.",
-	"version": "0.0.2",
-	"publisher": "mitchdenny",
-	"displayName": "Encode Decode",
-	"keywords": ["encode", "decode", "base64"],
-	"icon": "ecdc.png",
-	"engines": {
-		"vscode": "0.10.x"
-	},
-	"categories": [
-		"Other"
-	],
-	"license": "https://github.com/mitchdenny/ecdc/master/LICENSE",
-    "bugs": {
-        "url": "https://github.com/mitchdenny/ecdc/issues"
-    },
-    "homepage": "https://github.com/mitchdenny/ecdc/blob/master/README.md",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/mitchdenny/ecdc.git"
-    },
-	"activationEvents": [
-		"onCommand:extension.encodeSelection", "onCommand:extension.decodeSelection", "onCommand:extension.selectionProblem"
-	],
-	"main": "./out/extension",
-	"contributes": {
-		"commands": [
-			{
-				"command": "extension.selectionProblem",
-				"title": "Selection Problem"	
-			},
-			{
-				"command": "extension.encodeSelection",
-				"title": "Encode Selection"
-			},
-			{
-				"command": "extension.decodeSelection",
-				"title": "Decode Selection"
-			}
-		]
-	},
-	"scripts": {
-		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-		"compile": "node ./node_modules/vscode/bin/compile -watch -p ./"
-	},
-	"devDependencies": {
-		"vscode": "0.10.x"
-	}
+  "name": "ecdc",
+  "description": "An extension for Visual Studio Code that allows you to quickly encode and decode text selections.",
+  "version": "0.0.2",
+  "publisher": "mitchdenny",
+  "displayName": "Encode Decode",
+  "keywords": [
+    "encode",
+    "decode",
+    "base64"
+  ],
+  "icon": "ecdc.png",
+  "engines": {
+    "vscode": "0.10.x"
+  },
+  "categories": [
+    "Other"
+  ],
+  "license": "https://github.com/mitchdenny/ecdc/master/LICENSE",
+  "bugs": {
+    "url": "https://github.com/mitchdenny/ecdc/issues"
+  },
+  "homepage": "https://github.com/mitchdenny/ecdc/blob/master/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mitchdenny/ecdc.git"
+  },
+  "activationEvents": [
+    "onCommand:extension.encodeSelection",
+    "onCommand:extension.decodeSelection",
+    "onCommand:extension.selectionProblem"
+  ],
+  "main": "./out/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.selectionProblem",
+        "title": "Selection Problem"
+      },
+      {
+        "command": "extension.encodeSelection",
+        "title": "Encode Selection"
+      },
+      {
+        "command": "extension.decodeSelection",
+        "title": "Decode Selection"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+    "compile": "node ./node_modules/vscode/bin/compile -watch -p ./"
+  },
+  "devDependencies": {
+    "vscode": "0.10.x"
+  },
+  "dependencies": {
+    "sort-by": "^1.1.1"
+  }
 }
