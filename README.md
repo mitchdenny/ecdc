@@ -1,14 +1,7 @@
-# README
-## This is the README for your extension "ecdc" 
--------------------
-You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
+# ECDC
 
-* Split the editor (`Cmd+\` on OSX or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on OSX or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (OSX) to see a list of Markdown snippets
+The Encode/Decode (ecdc) extension allows you to quickly convert multiple selections of text to and from **base64** format. In the future we'll support other transformations.
 
-### For more information
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+## How to Use
 
-** Enjoy!**
+The extension provides two commands to the command palette. To active the command simply launch the command palette (`Shift-CMD-P` on OSX or `Shift-Ctrl-P` on Windows and Linux). Then just type `Encode Selection` or `Decode Selection` to find the appropriate command.
