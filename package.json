@@ -1,7 +1,7 @@
 {
   "name": "ecdc",
   "description": "An extension for Visual Studio Code that allows you to quickly encode and decode text selections.",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "publisher": "mitchdenny",
   "displayName": "Encode Decode",
   "keywords": [
