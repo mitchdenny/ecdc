@@ -33,10 +33,6 @@
   "contributes": {
     "commands": [
       {
-        "command": "extension.selectionProblem",
-        "title": "Selection Problem"
-      },
-      {
         "command": "extension.encodeSelection",
         "title": "Encode Selection"
       },
