@@ -1,6 +1,4 @@
 import * as vscode from 'vscode';
-var sortby = require('sort-by');
-
 class Change {
 	private textEditor: vscode.TextEditor;
 	private transform: (string) => string;
