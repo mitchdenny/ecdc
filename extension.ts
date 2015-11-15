@@ -1,4 +1,43 @@
 import * as vscode from 'vscode';
+
+interface Transformer {
+	getDescription(input: string): string;
+	check(input: string): boolean;
+	transform(input: string): string;
+}
+
+class StringToBase64Transformer implements Transformer {
+	public getDescription(input: string): string {
+		return "Encode String using Base64";
+	}
+	
+	public check(input: string): boolean {
+		return true;
+	}
+	
+	public transform(input: string): string {
+		var buffer = new Buffer(input);
+		var output = buffer.toString('base64');
+		return output;		
+	}
+}
+
+class Base64ToStringTransformer implements Transformer {
+	public getDescription(input: string): string {
+		return "Decode Base64 to String";
+	}
+	
+	public check(input: string): boolean {
+		return true;
+	}
+	
+	public transform(input: string): string {
+		var buffer = new Buffer(input, 'base64');
+		var output = buffer.toString('utf8');
+		return output;
+	}
+}
+
 class Change {
 	private textEditor: vscode.TextEditor;
 	private transform: (string) => string;
@@ -19,7 +58,7 @@ class Change {
 		this.originalOffset = originalOffset;
 	}
 	
-	transformText(edit: vscode.TextEditorEdit) {
+	public transformText(edit: vscode.TextEditorEdit) {
 		
 		let originalSelectionStartOffset = this.textEditor.document.offsetAt(this.originalSelection.start);
 		let originalSelectionEndOffset = this.textEditor.document.offsetAt(this.originalSelection.end);
@@ -36,7 +75,7 @@ class Change {
 		this.updatedOffset = this.originalOffset + this.inputOutputLengthDelta;
 	}
 	
-	updateSelection() {
+	public updateSelection() {
 		
 		let updatedSelectionStart = this.textEditor.document.positionAt(this.updatedSelectionStartOffset);
 		let updatedSelectionEnd = this.textEditor.document.positionAt(this.updatedSelectionStartOffset + this.output.length);
@@ -94,12 +133,13 @@ function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEdito
 
 function registerEncodeSelectionCommand(context: vscode.ExtensionContext) {
 	
-	var encodeSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.encodeSelection', (textEditor, edit) => {
+	let encodeSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.encodeSelection', (textEditor, edit) => {
 	
 		processSelections(textEditor, edit, (input) => {
-				var buffer = new Buffer(input);
-				var output = buffer.toString('base64');
-				return output;
+			
+			let transformer = new StringToBase64Transformer();
+			return transformer.transform(input);
+			
 		});
 
 	});
@@ -110,12 +150,13 @@ function registerEncodeSelectionCommand(context: vscode.ExtensionContext) {
 
 function registerDecodeSelectionCommand(context: vscode.ExtensionContext) {
 	
-	var decodeSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.decodeSelection', (textEditor, edit) => {
+	let decodeSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.decodeSelection', (textEditor, edit) => {
 	
 		processSelections(textEditor, edit, (input) => {
-				var buffer = new Buffer(input, 'base64');
-				var output = buffer.toString('utf8');
-				return output;
+			
+			let transformer = new Base64ToStringTransformer();
+			return transformer.transform(input);
+			
 		});
 
 	});
