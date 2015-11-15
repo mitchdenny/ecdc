@@ -54,7 +54,7 @@ class Base64ToStringTransformer implements Transformer {
 class Change {
 	
 	private textEditor: vscode.TextEditor;
-	private transform: (string) => string;
+	private transformer: Transformer;
 	private originalOffset: number;
 	private updatedSelectionStartOffset: number;
 	private inputOutputLengthDelta: number;
@@ -65,11 +65,11 @@ class Change {
 	public input: string;
 	public output: string;
 	
-	constructor(textEditor: vscode.TextEditor, originalSelection: vscode.Selection, transform: (string) => string, originalOffset: number) {
+	constructor(textEditor: vscode.TextEditor, originalSelection: vscode.Selection, transformer: Transformer, originalOffset: number) {
 		
 		this.textEditor = textEditor;
 		this.originalSelection = originalSelection;
-		this.transform = transform;
+		this.transformer = transformer;
 		this.originalOffset = originalOffset;
 	
 	}
@@ -84,7 +84,7 @@ class Change {
 		
 		let range = new vscode.Range(this.originalSelection.start, this.originalSelection.end);
 		this.input = this.textEditor.document.getText(range);
-		this.output = this.transform(this.input);
+		this.output = this.transformer.transform(this.input);
 		edit.replace(range, this.output);
 
 		this.inputOutputLengthDelta = this.output.length - this.input.length;
@@ -101,7 +101,7 @@ class Change {
 	}
 }
 
-function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit, transform: (string) => string) {
+function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit, transformer: Transformer) {
 	
 	let document = textEditor.document;
 	let changes: Change[] = [];
@@ -122,7 +122,7 @@ function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEdito
 			let change = new Change(
 				textEditor,
 				selection,
-				transform,
+				transformer,
 				offset
 				);
 			
@@ -157,11 +157,7 @@ function registerEncodeSelectionCommand(context: vscode.ExtensionContext) {
 		
 		vscode.window.showQuickPick(encodeTransformers).then((transformer) => {
 
-			processSelections(textEditor, edit, (input) => {
-			
-				return transformer.transform(input);
-				
-			});
+			processSelections(textEditor, edit, transformer);
 			
 		});
 
@@ -181,11 +177,7 @@ function registerDecodeSelectionCommand(context: vscode.ExtensionContext) {
 
 		vscode.window.showQuickPick(decodeTransformers).then((transformer) => {
 
-			processSelections(textEditor, edit, (input) => {
-				
-				return transformer.transform(input);
-				
-			});
+			processSelections(textEditor, edit, transformer);
 	
 		});
 
