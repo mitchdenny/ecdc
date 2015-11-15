@@ -1,14 +1,20 @@
 import * as vscode from 'vscode';
 
-interface Transformer {
-	getDescription(input: string): string;
+interface Transformer extends vscode.QuickPickItem {
+	
 	check(input: string): boolean;
 	transform(input: string): string;
+	
 }
 
 class StringToBase64Transformer implements Transformer {
-	public getDescription(input: string): string {
-		return "Encode String using Base64";
+	
+	public get label(): string {
+		return 'Encode String to Base64';
+	}
+	
+	public get description(): string {
+		return this.label;
 	}
 	
 	public check(input: string): boolean {
@@ -20,11 +26,17 @@ class StringToBase64Transformer implements Transformer {
 		var output = buffer.toString('base64');
 		return output;		
 	}
+	
 }
 
 class Base64ToStringTransformer implements Transformer {
-	public getDescription(input: string): string {
+	
+	public get label(): string {
 		return "Decode Base64 to String";
+	}
+	
+	public get description(): string {
+		return this.label;
 	}
 	
 	public check(input: string): boolean {
@@ -36,9 +48,11 @@ class Base64ToStringTransformer implements Transformer {
 		var output = buffer.toString('utf8');
 		return output;
 	}
+	
 }
 
 class Change {
+	
 	private textEditor: vscode.TextEditor;
 	private transform: (string) => string;
 	private originalOffset: number;
@@ -52,10 +66,12 @@ class Change {
 	public output: string;
 	
 	constructor(textEditor: vscode.TextEditor, originalSelection: vscode.Selection, transform: (string) => string, originalOffset: number) {
+		
 		this.textEditor = textEditor;
 		this.originalSelection = originalSelection;
 		this.transform = transform;
 		this.originalOffset = originalOffset;
+	
 	}
 	
 	public transformText(edit: vscode.TextEditorEdit) {
@@ -134,11 +150,18 @@ function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEdito
 function registerEncodeSelectionCommand(context: vscode.ExtensionContext) {
 	
 	let encodeSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.encodeSelection', (textEditor, edit) => {
-	
-		processSelections(textEditor, edit, (input) => {
+
+		let encodeTransformers: Transformer[] = [
+			new StringToBase64Transformer(),
+		];
+		
+		vscode.window.showQuickPick(encodeTransformers).then((transformer) => {
+
+			processSelections(textEditor, edit, (input) => {
 			
-			let transformer = new StringToBase64Transformer();
-			return transformer.transform(input);
+				return transformer.transform(input);
+				
+			});
 			
 		});
 
@@ -152,11 +175,18 @@ function registerDecodeSelectionCommand(context: vscode.ExtensionContext) {
 	
 	let decodeSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.decodeSelection', (textEditor, edit) => {
 	
-		processSelections(textEditor, edit, (input) => {
-			
-			let transformer = new Base64ToStringTransformer();
-			return transformer.transform(input);
-			
+		let decodeTransformers: Transformer[] = [
+			new Base64ToStringTransformer()	
+		];
+
+		vscode.window.showQuickPick(decodeTransformers).then((transformer) => {
+
+			processSelections(textEditor, edit, (input) => {
+				
+				return transformer.transform(input);
+				
+			});
+	
 		});
 
 	});
@@ -166,7 +196,7 @@ function registerDecodeSelectionCommand(context: vscode.ExtensionContext) {
 }
 
 export function activate(context: vscode.ExtensionContext) {
-
+	
 	registerEncodeSelectionCommand(context);
 	registerDecodeSelectionCommand(context);
 	
