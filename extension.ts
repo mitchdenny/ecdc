@@ -5,10 +5,14 @@ class Change {
 	private textEditor: vscode.TextEditor;
 	private transform: (string) => string;
 	private originalOffset: number;
+	private updatedSelectionStartOffset: number;
+	private inputOutputLengthDelta: number;
 
 	public originalSelection: vscode.Selection;
 	public updatedSelection: vscode.Selection;
 	public updatedOffset: number;
+	public input: string;
+	public output: string;
 	
 	constructor(textEditor: vscode.TextEditor, originalSelection: vscode.Selection, transform: (string) => string, originalOffset: number) {
 		this.textEditor = textEditor;
@@ -17,39 +21,37 @@ class Change {
 		this.originalOffset = originalOffset;
 	}
 	
-	apply(edit: vscode.TextEditorEdit) {
+	transformText(edit: vscode.TextEditorEdit) {
 		
-		// Grab the text from the document and replace it.
-		let range = new vscode.Range(this.originalSelection.start, this.originalSelection.end);
-		let input = this.textEditor.document.getText(range);
-		let output = this.transform(input);
-		edit.replace(range, output);
-
-		// Determine the delta in the input <-> output and recompute the updated selection end position.
-		let inputOutputLengthDelta = output.length - input.length;
-
-		// Calculates the offsets for the original selection;
 		let originalSelectionStartOffset = this.textEditor.document.offsetAt(this.originalSelection.start);
 		let originalSelectionEndOffset = this.textEditor.document.offsetAt(this.originalSelection.end);
 		let originalSelectionLength = originalSelectionEndOffset - originalSelectionStartOffset;
 		
-		// Shifts the selection offsets to incorporate previous selections that have been adjusted already.
-		let updatedSelectionStartOffset = originalSelectionStartOffset + this.originalOffset;
-		let updatedSelectionEndOffset = updatedSelectionStartOffset + originalSelectionLength + inputOutputLengthDelta;
+		this.updatedSelectionStartOffset = originalSelectionStartOffset + this.originalOffset;
 		
-		let updatedSelectionStart = this.textEditor.document.positionAt(updatedSelectionStartOffset);
-		let updatedSelectionEnd = this.textEditor.document.positionAt(updatedSelectionEndOffset);
+		let range = new vscode.Range(this.originalSelection.start, this.originalSelection.end);
+		this.input = this.textEditor.document.getText(range);
+		this.output = this.transform(this.input);
+		edit.replace(range, this.output);
+
+		this.inputOutputLengthDelta = this.output.length - this.input.length;
+		this.updatedOffset = this.originalOffset + this.inputOutputLengthDelta;
+	}
+	
+	updateSelection() {
+		
+		let updatedSelectionStart = this.textEditor.document.positionAt(this.updatedSelectionStartOffset);
+		let updatedSelectionEnd = this.textEditor.document.positionAt(this.updatedSelectionStartOffset + this.output.length);
 
 		// Build and store the new selection.
-		this.updatedSelection = new vscode.Selection(updatedSelectionStart, updatedSelectionEnd);
-		this.updatedOffset = this.originalOffset + inputOutputLengthDelta;
+		this.updatedSelection = new vscode.Selection(updatedSelectionStart, updatedSelectionEnd);		
 	}
 }
 
 function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit, transform: (string) => string) {
 	
 	let document = textEditor.document;
-	let changes = [];
+	let changes: Change[] = [];
 	let updatedSelections: vscode.Selection[] = [];
 	
 	textEditor.edit((editBuilder) => {
@@ -73,16 +75,22 @@ function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEdito
 			
 			changes[selectionIndex] = change;
 			
-			change.apply(editBuilder);
-			updatedSelections.push(change.updatedSelection);
+			change.transformText(editBuilder);
 			
 		}
 		
 	}).then(() => {
+		
+		for (let changeIndex = 0; changeIndex < changes.length; changeIndex++) {
+			let change = changes[changeIndex];
+			change.updateSelection();
+			updatedSelections.push(change.updatedSelection);
+			
+		}
+		
 		textEditor.selections = updatedSelections;
+		
 	});
-	
-
 		
 }
 
