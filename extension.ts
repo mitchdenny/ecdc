@@ -1,7 +1,178 @@
 import * as vscode from 'vscode';
+import * as util from 'util';
+import * as crypto from 'crypto';
+
+interface Transformer extends vscode.QuickPickItem {
+	
+	check(input: string): boolean;
+	transform(input: string): string;
+	
+}
+
+class StringToJsonArrayTransformer implements Transformer {
+	
+	public get label(): string {
+		
+		return 'Convert String as JSON Byte Array';
+		
+	}
+	
+	public get description(): string {
+		
+		return this.label;	
+	
+	}
+	
+	public check(input: string): boolean {
+		
+		return true;
+		
+	}
+	
+	public transform(input: string): string {
+		
+		let buffer = new Buffer(input, 'utf8');
+		let data = buffer.toJSON().data;
+		let output = JSON.stringify(data);
+		return output;
+		
+	}
+	
+}
+
+class Base64ToJsonArrayTransformer implements Transformer {
+	
+	public get label(): string {
+
+		return 'Convert Base64 to JSON Byte Array';
+
+	}
+	
+	public get description(): string {
+
+		return this.label;
+
+	}
+	
+	public check(input: string): boolean {
+
+		return true;
+
+	}
+	
+	public transform(input: string): string {
+
+		let buffer = new Buffer(input, 'base64');
+		let data = buffer.toJSON().data;
+		let output = JSON.stringify(data);
+		return output;
+
+	}
+	
+}
+
+class StringToMD5Transformer implements Transformer {
+	
+	public get label(): string {
+
+		return 'Convert String to MD5 Hase (Base64 Encoded)';
+
+	}
+	
+	public get description(): string {
+
+		return this.label;
+
+	}
+	
+	public check(input: string): boolean {
+
+		return true;
+
+	}
+	
+	public transform(input: string): string {
+
+		let hash = crypto.createHash('md5');
+		hash.update(input, 'utf8');
+
+		let output = hash.digest('base64');
+		return output;
+
+	}
+	
+}
+
+class StringToBase64Transformer implements Transformer {
+	
+	public get label(): string {
+
+		return 'Convert String to Base64';
+
+	}
+	
+	public get description(): string {
+
+		return this.label;
+
+	}
+	
+	public check(input: string): boolean {
+
+		return true;
+
+	}
+	
+	public transform(input: string): string {
+
+		var buffer = new Buffer(input);
+		var output = buffer.toString('base64');
+		return output;		
+
+	}
+	
+}
+
+class Base64ToStringTransformer implements Transformer {
+	
+	public get label(): string {
+
+		return "Decode Base64 to String";
+
+	}
+	
+	public get description(): string {
+
+		return this.label;
+
+	}
+	
+	public check(input: string): boolean {
+
+		return true;
+
+	}
+	
+	public transform(input: string): string {
+
+		var buffer = new Buffer(input, 'base64');
+		var output = buffer.toString('utf8');
+		return output;
+
+	}
+	
+}
+
+class Context {
+
+	public failedChanges: Change[] = [];
+	
+}
+
 class Change {
+	
 	private textEditor: vscode.TextEditor;
-	private transform: (string) => string;
+	private transformer: Transformer;
 	private originalOffset: number;
 	private updatedSelectionStartOffset: number;
 	private inputOutputLengthDelta: number;
@@ -12,14 +183,16 @@ class Change {
 	public input: string;
 	public output: string;
 	
-	constructor(textEditor: vscode.TextEditor, originalSelection: vscode.Selection, transform: (string) => string, originalOffset: number) {
+	constructor(textEditor: vscode.TextEditor, originalSelection: vscode.Selection, transformer: Transformer, originalOffset: number) {
+		
 		this.textEditor = textEditor;
 		this.originalSelection = originalSelection;
-		this.transform = transform;
+		this.transformer = transformer;
 		this.originalOffset = originalOffset;
+	
 	}
 	
-	transformText(edit: vscode.TextEditorEdit) {
+	public transformText(context: Context, edit: vscode.TextEditorEdit) {
 		
 		let originalSelectionStartOffset = this.textEditor.document.offsetAt(this.originalSelection.start);
 		let originalSelectionEndOffset = this.textEditor.document.offsetAt(this.originalSelection.end);
@@ -29,14 +202,25 @@ class Change {
 		
 		let range = new vscode.Range(this.originalSelection.start, this.originalSelection.end);
 		this.input = this.textEditor.document.getText(range);
-		this.output = this.transform(this.input);
+		
+		if (this.transformer.check(this.input) == true) {
+			
+			this.output = this.transformer.transform(this.input);
+			
+		} else {
+			
+			this.output = this.input;
+			context.failedChanges.push(this);
+			
+		}
+		
 		edit.replace(range, this.output);
 
 		this.inputOutputLengthDelta = this.output.length - this.input.length;
 		this.updatedOffset = this.originalOffset + this.inputOutputLengthDelta;
 	}
 	
-	updateSelection() {
+	public updateSelection() {
 		
 		let updatedSelectionStart = this.textEditor.document.positionAt(this.updatedSelectionStartOffset);
 		let updatedSelectionEnd = this.textEditor.document.positionAt(this.updatedSelectionStartOffset + this.output.length);
@@ -46,11 +230,12 @@ class Change {
 	}
 }
 
-function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit, transform: (string) => string) {
+function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit, transformer: Transformer) {
 	
 	let document = textEditor.document;
 	let changes: Change[] = [];
 	let updatedSelections: vscode.Selection[] = [];
+	let context = new Context();
 	
 	textEditor.edit((editBuilder) => {
 		
@@ -67,19 +252,20 @@ function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEdito
 			let change = new Change(
 				textEditor,
 				selection,
-				transform,
+				transformer,
 				offset
 				);
 			
 			changes[selectionIndex] = change;
 			
-			change.transformText(editBuilder);
+			change.transformText(context, editBuilder);
 			
 		}
 		
 	}).then(() => {
 		
 		for (let changeIndex = 0; changeIndex < changes.length; changeIndex++) {
+		
 			let change = changes[changeIndex];
 			change.updateSelection();
 			updatedSelections.push(change.updatedSelection);
@@ -88,45 +274,48 @@ function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEdito
 		
 		textEditor.selections = updatedSelections;
 		
+	}).then(() => {
+		
+		if (context.failedChanges.length != 0) {
+			
+			let message = util.format(
+				'%s selections could not be processed.',
+				context.failedChanges.length
+				);
+			
+			vscode.window.showWarningMessage(message);		
+		}
+		
 	});
 		
 }
 
-function registerEncodeSelectionCommand(context: vscode.ExtensionContext) {
+function registerConvertSelectionCommand(context: vscode.ExtensionContext) {
 	
-	var encodeSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.encodeSelection', (textEditor, edit) => {
+	let convertSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.convertSelection', (textEditor, edit) => {
 	
-		processSelections(textEditor, edit, (input) => {
-				var buffer = new Buffer(input);
-				var output = buffer.toString('base64');
-				return output;
-		});
+		let transformers: Transformer[] = [
+			new StringToBase64Transformer(),
+			new Base64ToStringTransformer(),
+			new StringToJsonArrayTransformer(),
+			new Base64ToJsonArrayTransformer(),
+			new StringToMD5Transformer()
+		];
 
-	});
-	
-	context.subscriptions.push(encodeSelectionDisposable);
+		vscode.window.showQuickPick(transformers).then((transformer) => {
 
-}
-
-function registerDecodeSelectionCommand(context: vscode.ExtensionContext) {
+			processSelections(textEditor, edit, transformer);
 	
-	var decodeSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.decodeSelection', (textEditor, edit) => {
-	
-		processSelections(textEditor, edit, (input) => {
-				var buffer = new Buffer(input, 'base64');
-				var output = buffer.toString('utf8');
-				return output;
 		});
 
 	});
 		
-	context.subscriptions.push(decodeSelectionDisposable);
+	context.subscriptions.push(convertSelectionDisposable);
 
 }
 
 export function activate(context: vscode.ExtensionContext) {
-
-	registerEncodeSelectionCommand(context);
-	registerDecodeSelectionCommand(context);
+	
+	registerConvertSelectionCommand(context);
 	
 }
