@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import * as util from 'util';
+import * as crypto from 'crypto';
 
 interface Transformer extends vscode.QuickPickItem {
 	
@@ -51,6 +53,12 @@ class Base64ToStringTransformer implements Transformer {
 	
 }
 
+class Context {
+
+	public failedChanges: Change[] = [];
+	
+}
+
 class Change {
 	
 	private textEditor: vscode.TextEditor;
@@ -74,7 +82,7 @@ class Change {
 	
 	}
 	
-	public transformText(edit: vscode.TextEditorEdit) {
+	public transformText(context: Context, edit: vscode.TextEditorEdit) {
 		
 		let originalSelectionStartOffset = this.textEditor.document.offsetAt(this.originalSelection.start);
 		let originalSelectionEndOffset = this.textEditor.document.offsetAt(this.originalSelection.end);
@@ -84,7 +92,18 @@ class Change {
 		
 		let range = new vscode.Range(this.originalSelection.start, this.originalSelection.end);
 		this.input = this.textEditor.document.getText(range);
-		this.output = this.transformer.transform(this.input);
+		
+		if (this.transformer.check(this.input) == true) {
+			
+			this.output = this.transformer.transform(this.input);
+			
+		} else {
+			
+			this.output = this.input;
+			context.failedChanges.push(this);
+			
+		}
+		
 		edit.replace(range, this.output);
 
 		this.inputOutputLengthDelta = this.output.length - this.input.length;
@@ -106,6 +125,7 @@ function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEdito
 	let document = textEditor.document;
 	let changes: Change[] = [];
 	let updatedSelections: vscode.Selection[] = [];
+	let context = new Context();
 	
 	textEditor.edit((editBuilder) => {
 		
@@ -128,13 +148,14 @@ function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEdito
 			
 			changes[selectionIndex] = change;
 			
-			change.transformText(editBuilder);
+			change.transformText(context, editBuilder);
 			
 		}
 		
 	}).then(() => {
 		
 		for (let changeIndex = 0; changeIndex < changes.length; changeIndex++) {
+		
 			let change = changes[changeIndex];
 			change.updateSelection();
 			updatedSelections.push(change.updatedSelection);
@@ -142,6 +163,18 @@ function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEdito
 		}
 		
 		textEditor.selections = updatedSelections;
+		
+	}).then(() => {
+		
+		if (context.failedChanges.length != 0) {
+			
+			let message = util.format(
+				'%s selections could not be processed.',
+				context.failedChanges.length
+				);
+			
+			vscode.window.showWarningMessage(message);		
+		}
 		
 	});
 		
