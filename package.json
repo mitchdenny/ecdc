@@ -26,19 +26,14 @@
     "url": "https://github.com/mitchdenny/ecdc.git"
   },
   "activationEvents": [
-    "onCommand:extension.encodeSelection",
-    "onCommand:extension.decodeSelection"
+    "onCommand:extension.convertSelection"
   ],
   "main": "./out/extension",
   "contributes": {
     "commands": [
       {
-        "command": "extension.encodeSelection",
-        "title": "Encode Selection"
-      },
-      {
-        "command": "extension.decodeSelection",
-        "title": "Decode Selection"
+        "command": "extension.convertSelection",
+        "title": "Convert Selection"
       }
     ]
   },

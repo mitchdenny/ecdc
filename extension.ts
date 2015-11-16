@@ -9,24 +9,126 @@ interface Transformer extends vscode.QuickPickItem {
 	
 }
 
-class StringToBase64Transformer implements Transformer {
+class StringToJsonArrayTransformer implements Transformer {
 	
 	public get label(): string {
-		return 'Encode String to Base64';
+		
+		return 'Convert String as JSON Byte Array';
+		
 	}
 	
 	public get description(): string {
-		return this.label;
+		
+		return this.label;	
+	
 	}
 	
 	public check(input: string): boolean {
+		
 		return true;
+		
 	}
 	
 	public transform(input: string): string {
+		
+		let buffer = new Buffer(input, 'utf8');
+		let data = buffer.toJSON().data;
+		let output = JSON.stringify(data);
+		return output;
+		
+	}
+	
+}
+
+class Base64ToJsonArrayTransformer implements Transformer {
+	
+	public get label(): string {
+
+		return 'Convert Base64 to JSON Byte Array';
+
+	}
+	
+	public get description(): string {
+
+		return this.label;
+
+	}
+	
+	public check(input: string): boolean {
+
+		return true;
+
+	}
+	
+	public transform(input: string): string {
+
+		let buffer = new Buffer(input, 'base64');
+		let data = buffer.toJSON().data;
+		let output = JSON.stringify(data);
+		return output;
+
+	}
+	
+}
+
+class StringToMD5Transformer implements Transformer {
+	
+	public get label(): string {
+
+		return 'Convert String to MD5 Hase (Base64 Encoded)';
+
+	}
+	
+	public get description(): string {
+
+		return this.label;
+
+	}
+	
+	public check(input: string): boolean {
+
+		return true;
+
+	}
+	
+	public transform(input: string): string {
+
+		let hash = crypto.createHash('md5');
+		hash.update(input, 'utf8');
+
+		let output = hash.digest('base64');
+		return output;
+
+	}
+	
+}
+
+class StringToBase64Transformer implements Transformer {
+	
+	public get label(): string {
+
+		return 'Convert String to Base64';
+
+	}
+	
+	public get description(): string {
+
+		return this.label;
+
+	}
+	
+	public check(input: string): boolean {
+
+		return true;
+
+	}
+	
+	public transform(input: string): string {
+
 		var buffer = new Buffer(input);
 		var output = buffer.toString('base64');
 		return output;		
+
 	}
 	
 }
@@ -34,21 +136,29 @@ class StringToBase64Transformer implements Transformer {
 class Base64ToStringTransformer implements Transformer {
 	
 	public get label(): string {
+
 		return "Decode Base64 to String";
+
 	}
 	
 	public get description(): string {
+
 		return this.label;
+
 	}
 	
 	public check(input: string): boolean {
+
 		return true;
+
 	}
 	
 	public transform(input: string): string {
+
 		var buffer = new Buffer(input, 'base64');
 		var output = buffer.toString('utf8');
 		return output;
+
 	}
 	
 }
@@ -180,35 +290,19 @@ function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEdito
 		
 }
 
-function registerEncodeSelectionCommand(context: vscode.ExtensionContext) {
+function registerConvertSelectionCommand(context: vscode.ExtensionContext) {
 	
-	let encodeSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.encodeSelection', (textEditor, edit) => {
-
-		let encodeTransformers: Transformer[] = [
+	let convertSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.convertSelection', (textEditor, edit) => {
+	
+		let transformers: Transformer[] = [
 			new StringToBase64Transformer(),
-		];
-		
-		vscode.window.showQuickPick(encodeTransformers).then((transformer) => {
-
-			processSelections(textEditor, edit, transformer);
-			
-		});
-
-	});
-	
-	context.subscriptions.push(encodeSelectionDisposable);
-
-}
-
-function registerDecodeSelectionCommand(context: vscode.ExtensionContext) {
-	
-	let decodeSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.decodeSelection', (textEditor, edit) => {
-	
-		let decodeTransformers: Transformer[] = [
-			new Base64ToStringTransformer()	
+			new Base64ToStringTransformer(),
+			new StringToJsonArrayTransformer(),
+			new Base64ToJsonArrayTransformer(),
+			new StringToMD5Transformer()
 		];
 
-		vscode.window.showQuickPick(decodeTransformers).then((transformer) => {
+		vscode.window.showQuickPick(transformers).then((transformer) => {
 
 			processSelections(textEditor, edit, transformer);
 	
@@ -216,13 +310,12 @@ function registerDecodeSelectionCommand(context: vscode.ExtensionContext) {
 
 	});
 		
-	context.subscriptions.push(decodeSelectionDisposable);
+	context.subscriptions.push(convertSelectionDisposable);
 
 }
 
 export function activate(context: vscode.ExtensionContext) {
 	
-	registerEncodeSelectionCommand(context);
-	registerDecodeSelectionCommand(context);
+	registerConvertSelectionCommand(context);
 	
 }
