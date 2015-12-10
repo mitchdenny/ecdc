@@ -1,7 +1,7 @@
 {
   "name": "ecdc",
   "description": "An extension for Visual Studio Code that allows you to quickly convert text selections.",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "publisher": "mitchdenny",
   "displayName": "Encode Decode",
   "keywords": [
@@ -43,5 +43,8 @@
   },
   "devDependencies": {
     "vscode": "0.10.x"
+  },
+  "dependencies": {
+    "ent": "^2.2.0"
   }
 }

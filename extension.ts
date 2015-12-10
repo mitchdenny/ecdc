@@ -1,12 +1,51 @@
 import * as vscode from 'vscode';
 import * as util from 'util';
 import * as crypto from 'crypto';
+import * as ent from 'ent';
 
 interface Transformer extends vscode.QuickPickItem {
 	
 	check(input: string): boolean;
 	transform(input: string): string;
 	
+}
+
+class HtmlEntitiesToStringTransformer implements Transformer {
+	public get label(): string {
+		return 'Convert HTML Entities to String';	
+	}
+	
+	public get description(): string {
+		return this.label;
+	}
+	
+	public check(input: string): boolean {
+		return true;
+	}
+	
+	public transform(input: string): string {
+		let output = ent.decode(input);
+		return output;
+	}
+}
+
+class StringToHtmlEntitiesTransformer implements Transformer {
+	public get label(): string {
+		return 'Convert String to HTML Entities';	
+	}
+	
+	public get description(): string {
+		return this.label;
+	}
+	
+	public check(input: string): boolean {
+		return true;
+	}
+	
+	public transform(input: string): string {
+		let output = ent.encode(input);
+		return output;
+	}
 }
 
 class StringToJsonArrayTransformer implements Transformer {
@@ -299,7 +338,9 @@ function registerConvertSelectionCommand(context: vscode.ExtensionContext) {
 			new Base64ToStringTransformer(),
 			new StringToJsonArrayTransformer(),
 			new Base64ToJsonArrayTransformer(),
-			new StringToMD5Transformer()
+			new StringToMD5Transformer(),
+			new StringToHtmlEntitiesTransformer(),
+			new HtmlEntitiesToStringTransformer()
 		];
 
 		vscode.window.showQuickPick(transformers).then((transformer) => {
