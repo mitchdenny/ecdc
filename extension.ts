@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as util from 'util';
 import * as crypto from 'crypto';
-import * as ent from 'ent';
+var ent = require('ent');
 
 interface Transformer extends vscode.QuickPickItem {
 	
