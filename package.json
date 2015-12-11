@@ -1,1 +1,53 @@
-{"name":"ecdc","description":"An extension for Visual Studio Code that allows you to quickly convert text selections.","publisher":"mitchdenny","displayName":"Encode Decode","keywords":["encode","decode","base64"],"icon":"ecdc.png","engines":{"vscode":"0.10.x"},"categories":["Other"],"license":"Apache-2.0","bugs":{"url":"https://github.com/mitchdenny/ecdc/issues"},"homepage":"https://github.com/mitchdenny/ecdc/blob/master/README.md","repository":{"type":"git","url":"https://github.com/mitchdenny/ecdc.git"},"activationEvents":["onCommand:extension.convertSelection"],"main":"./out/extension","contributes":{"commands":[{"command":"extension.convertSelection","title":"Convert Selection"}]},"scripts":{"vscode:prepublish":"node ./node_modules/vscode/bin/compile","compile":"node ./node_modules/vscode/bin/compile -watch -p ./"},"devDependencies":{"gulp":"^3.9.0","typescript":"^1.7.3","vsce":"^0.9.0","vscode":"0.10.x"},"dependencies":{"ent":"^2.2.0"}}
+{
+	"name": "ecdc",
+	"description": "An extension for Visual Studio Code that allows you to quickly convert text selections.",
+	"publisher": "mitchdenny",
+	"displayName": "Encode Decode",
+	"version": "0.0.0",
+	"keywords": [
+		"encode",
+		"decode",
+		"base64"
+	],
+	"icon": "ecdc.png",
+	"engines": {
+		"vscode": "0.10.x"
+	},
+	"categories": [
+		"Other"
+	],
+	"license": "Apache-2.0",
+	"bugs": {
+		"url": "https://github.com/mitchdenny/ecdc/issues"
+	},
+	"homepage": "https://github.com/mitchdenny/ecdc/blob/master/README.md",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/mitchdenny/ecdc.git"
+	},
+	"activationEvents": [
+		"onCommand:extension.convertSelection"
+	],
+	"main": "./out/extension",
+	"contributes": {
+		"commands": [
+			{
+				"command": "extension.convertSelection",
+				"title": "Convert Selection"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+		"compile": "node ./node_modules/vscode/bin/compile -watch -p ./"
+	},
+	"devDependencies": {
+		"gulp": "^3.9.0",
+		"typescript": "^1.7.3",
+		"vsce": "^0.9.0",
+		"vscode": "0.10.x"
+	},
+	"dependencies": {
+		"ent": "^2.2.0"
+	}
+}
