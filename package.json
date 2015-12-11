@@ -42,6 +42,7 @@
     "compile": "node ./node_modules/vscode/bin/compile -watch -p ./"
   },
   "devDependencies": {
+    "gulp": "^3.9.0",
     "typescript": "^1.7.3",
     "vsce": "^0.9.0",
     "vscode": "0.10.x"
