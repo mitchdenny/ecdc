@@ -16,7 +16,7 @@
   "categories": [
     "Other"
   ],
-  "license": "https://github.com/mitchdenny/ecdc/master/LICENSE",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/mitchdenny/ecdc/issues"
   },
@@ -42,6 +42,8 @@
     "compile": "node ./node_modules/vscode/bin/compile -watch -p ./"
   },
   "devDependencies": {
+    "typescript": "^1.7.3",
+    "vsce": "^0.9.0",
     "vscode": "0.10.x"
   },
   "dependencies": {
