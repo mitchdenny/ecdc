@@ -14,5 +14,5 @@ gulp.task('default', function() {
 	}
 
 	var updatedContents = JSON.stringify(pkg, null, '\t');
-	console.log(updatedContents);
-})
+	fs.writeFileSync('package.json', updatedContents);
+});
