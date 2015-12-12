@@ -43,7 +43,7 @@ class StringToHtmlEntitiesTransformer implements Transformer {
 	}
 	
 	public transform(input: string): string {
-		let output = ent.encode(input);
+		let output = ent.encode(input, { named: true });
 		return output;
 	}
 }
