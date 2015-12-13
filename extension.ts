@@ -1,47 +1,9 @@
 import * as core from './lib/core';
 import * as crockford32 from './lib/crockford32';
+import * as htmlentities from './lib/htmlentities';
 import * as vscode from 'vscode';
 import * as util from 'util';
 import * as crypto from 'crypto';
-var ent = require('ent');
-
-class HtmlEntitiesToStringTransformer implements core.Transformer {
-	public get label(): string {
-		return 'HTML Entities to String';	
-	}
-	
-	public get description(): string {
-		return this.label;
-	}
-	
-	public check(input: string): boolean {
-		return true;
-	}
-	
-	public transform(input: string): string {
-		let output = ent.decode(input);
-		return output;
-	}
-}
-
-class StringToHtmlEntitiesTransformer implements core.Transformer {
-	public get label(): string {
-		return 'String to HTML Entities';	
-	}
-	
-	public get description(): string {
-		return this.label;
-	}
-	
-	public check(input: string): boolean {
-		return true;
-	}
-	
-	public transform(input: string): string {
-		let output = ent.encode(input, { named: true });
-		return output;
-	}
-}
 
 class StringToJsonArrayTransformer implements core.Transformer {
 	public get label(): string {
@@ -263,8 +225,8 @@ function registerConvertSelectionCommand(context: vscode.ExtensionContext) {
 			new StringToJsonArrayTransformer(),
 			new Base64ToJsonArrayTransformer(),
 			new StringToMD5Transformer(),
-			new StringToHtmlEntitiesTransformer(),
-			new HtmlEntitiesToStringTransformer(),
+			new htmlentities.StringToHtmlEntitiesTransformer(),
+			new htmlentities.HtmlEntitiesToStringTransformer(),
 			new crockford32.IntegerToCrockfordBase32Transformer(),
 			new crockford32.CrockfordBase32ToIntegerTransformer()
 		];
