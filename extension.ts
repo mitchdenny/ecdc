@@ -1,52 +1,11 @@
+import * as core from './lib/core';
+import * as crockford32 from './lib/crockford32';
 import * as vscode from 'vscode';
 import * as util from 'util';
 import * as crypto from 'crypto';
 var ent = require('ent');
-var enc = require('encode32');
 
-interface Transformer extends vscode.QuickPickItem {
-	check(input: string): boolean;
-	transform(input: string): string;
-}
-
-class CrockfordBase32ToIntegerTransformer implements Transformer {
-	public get label(): string {
-		return 'Crockford Base32 to Integer';
-	}
-	
-	public get description(): string {
-		return this.label;
-	}
-	
-	public check(input: string): boolean {
-		return true;
-	}
-	
-	public transform(input: string): string {
-		return enc.decode32(input);
-	}
-}
-
-class IntegerToCrockfordBase32Transformer implements Transformer {
-	public get label(): string {
-		return 'Integer to Crockford Base32';
-	}
-	
-	public get description(): string {
-		return this.label;
-	}
-	
-	public check(input: string): boolean {
-		return true;
-	}
-	
-	public transform(input: string): string {
-		let inputAsInteger = Number.parseInt(input);
-		return enc.encode32(inputAsInteger);
-	}	
-}
-
-class HtmlEntitiesToStringTransformer implements Transformer {
+class HtmlEntitiesToStringTransformer implements core.Transformer {
 	public get label(): string {
 		return 'HTML Entities to String';	
 	}
@@ -65,7 +24,7 @@ class HtmlEntitiesToStringTransformer implements Transformer {
 	}
 }
 
-class StringToHtmlEntitiesTransformer implements Transformer {
+class StringToHtmlEntitiesTransformer implements core.Transformer {
 	public get label(): string {
 		return 'String to HTML Entities';	
 	}
@@ -84,7 +43,7 @@ class StringToHtmlEntitiesTransformer implements Transformer {
 	}
 }
 
-class StringToJsonArrayTransformer implements Transformer {
+class StringToJsonArrayTransformer implements core.Transformer {
 	public get label(): string {
 		return 'String as JSON Byte Array';
 	}
@@ -106,7 +65,7 @@ class StringToJsonArrayTransformer implements Transformer {
 	}
 }
 
-class Base64ToJsonArrayTransformer implements Transformer {
+class Base64ToJsonArrayTransformer implements core.Transformer {
 	public get label(): string {
 		return 'Base64 to JSON Byte Array';
 	}
@@ -128,7 +87,7 @@ class Base64ToJsonArrayTransformer implements Transformer {
 	}
 }
 
-class StringToMD5Transformer implements Transformer {
+class StringToMD5Transformer implements core.Transformer {
 	public get label(): string {
 		return 'String to MD5 Hase (Base64 Encoded)';
 	}
@@ -150,7 +109,7 @@ class StringToMD5Transformer implements Transformer {
 	}
 }
 
-class StringToBase64Transformer implements Transformer {
+class StringToBase64Transformer implements core.Transformer {
 	public get label(): string {
 		return 'String to Base64';
 	}
@@ -171,7 +130,7 @@ class StringToBase64Transformer implements Transformer {
 	}
 }
 
-class Base64ToStringTransformer implements Transformer {
+class Base64ToStringTransformer implements core.Transformer {
 	public get label(): string {
 		return "Base64 to String";
 	}
@@ -198,7 +157,7 @@ class Context {
 
 class Change {
 	private textEditor: vscode.TextEditor;
-	private transformer: Transformer;
+	private transformer: core.Transformer;
 	private originalOffset: number;
 	private updatedSelectionStartOffset: number;
 	private inputOutputLengthDelta: number;
@@ -209,7 +168,7 @@ class Change {
 	public input: string;
 	public output: string;
 	
-	constructor(textEditor: vscode.TextEditor, originalSelection: vscode.Selection, transformer: Transformer, originalOffset: number) {
+	constructor(textEditor: vscode.TextEditor, originalSelection: vscode.Selection, transformer: core.Transformer, originalOffset: number) {
 		this.textEditor = textEditor;
 		this.originalSelection = originalSelection;
 		this.transformer = transformer;
@@ -248,7 +207,7 @@ class Change {
 	}
 }
 
-function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit, transformer: Transformer) {
+function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit, transformer: core.Transformer) {
 	let document = textEditor.document;
 	let changes: Change[] = [];
 	let updatedSelections: vscode.Selection[] = [];
@@ -298,7 +257,7 @@ function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEdito
 
 function registerConvertSelectionCommand(context: vscode.ExtensionContext) {
 	let convertSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.convertSelection', (textEditor, edit) => {
-		let transformers: Transformer[] = [
+		let transformers: core.Transformer[] = [
 			new StringToBase64Transformer(),
 			new Base64ToStringTransformer(),
 			new StringToJsonArrayTransformer(),
@@ -306,8 +265,8 @@ function registerConvertSelectionCommand(context: vscode.ExtensionContext) {
 			new StringToMD5Transformer(),
 			new StringToHtmlEntitiesTransformer(),
 			new HtmlEntitiesToStringTransformer(),
-			new IntegerToCrockfordBase32Transformer(),
-			new CrockfordBase32ToIntegerTransformer()
+			new crockford32.IntegerToCrockfordBase32Transformer(),
+			new crockford32.CrockfordBase32ToIntegerTransformer()
 		];
 
 		vscode.window.showQuickPick(transformers).then((transformer) => {
