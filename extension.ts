@@ -1,118 +1,12 @@
 import * as core from './lib/core';
 import * as crockford32 from './lib/crockford32';
 import * as htmlentities from './lib/htmlentities';
+import * as base64 from './lib/base64';
+import * as md5 from './lib/md5';
+import * as jsonarray from './lib/jsonarray';
 import * as telemetry from './lib/telemetry';
 import * as vscode from 'vscode';
 import * as util from 'util';
-import * as crypto from 'crypto';
-
-class StringToJsonArrayTransformer implements core.Transformer {
-	public get label(): string {
-		return 'String as JSON Byte Array';
-	}
-
-	public get description(): string {
-		return this.label;
-	}
-
-	public check(input: string): boolean {
-		return true;
-	}
-
-	public transform(input: string): string {
-		let buffer = new Buffer(input, 'utf8');
-		let data = buffer.toJSON().data;
-		let output = JSON.stringify(data);
-
-		return output;
-	}
-}
-
-class Base64ToJsonArrayTransformer implements core.Transformer {
-	public get label(): string {
-		return 'Base64 to JSON Byte Array';
-	}
-
-	public get description(): string {
-		return this.label;
-	}
-
-	public check(input: string): boolean {
-		return true;
-	}
-
-	public transform(input: string): string {
-		let buffer = new Buffer(input, 'base64');
-		let data = buffer.toJSON().data;
-		let output = JSON.stringify(data);
-
-		return output;
-	}
-}
-
-class StringToMD5Transformer implements core.Transformer {
-	public get label(): string {
-		return 'String to MD5 Hase (Base64 Encoded)';
-	}
-
-	public get description(): string {
-		return this.label;
-	}
-
-	public check(input: string): boolean {
-		return true;
-	}
-
-	public transform(input: string): string {
-		let hash = crypto.createHash('md5');
-		hash.update(input, 'utf8');
-
-		let output = hash.digest('base64');
-		return output;
-	}
-}
-
-class StringToBase64Transformer implements core.Transformer {
-	public get label(): string {
-		return 'String to Base64';
-	}
-
-	public get description(): string {
-		return this.label;
-	}
-
-	public check(input: string): boolean {
-		return true;
-	}
-
-	public transform(input: string): string {
-		var buffer = new Buffer(input);
-		var output = buffer.toString('base64');
-
-		return output;
-	}
-}
-
-class Base64ToStringTransformer implements core.Transformer {
-	public get label(): string {
-		return "Base64 to String";
-	}
-
-	public get description(): string {
-		return this.label;
-	}
-
-	public check(input: string): boolean {
-		return true;
-	}
-
-	public transform(input: string): string {
-		var buffer = new Buffer(input, 'base64');
-		var output = buffer.toString('utf8');
-
-		return output;
-	}
-}
 
 class Context {
 	public failedChanges: Change[] = [];
@@ -220,11 +114,11 @@ function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEdito
 
 function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit) {
 	let transformers: core.Transformer[] = [
-		new StringToBase64Transformer(),
-		new Base64ToStringTransformer(),
-		new StringToJsonArrayTransformer(),
-		new Base64ToJsonArrayTransformer(),
-		new StringToMD5Transformer(),
+		new base64.StringToBase64Transformer(),
+		new base64.Base64ToStringTransformer(),
+		new jsonarray.StringToJsonArrayTransformer(),
+		new jsonarray.Base64ToJsonArrayTransformer(),
+		new md5.StringToMD5Transformer(),
 		new htmlentities.StringToHtmlEntitiesTransformer(),
 		new htmlentities.HtmlEntitiesToStringTransformer(),
 		new crockford32.IntegerToCrockfordBase32Transformer(),
