@@ -42,7 +42,7 @@
       "properties": {
         "ecdc.collectTelemetry": {
           "type": "boolean",
-          "default": null,
+          "default": true,
           "description": "Controls whether data is collected to make Encode Decode better."
         }
       }
