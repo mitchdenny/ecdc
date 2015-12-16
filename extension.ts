@@ -218,9 +218,8 @@ function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEdito
 	});
 }
 
-function registerConvertSelectionCommand(context: vscode.ExtensionContext) {
-	let convertSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.convertSelection', (textEditor, edit) => {
-		let transformers: core.Transformer[] = [
+function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit) {
+	let transformers: core.Transformer[] = [
 			new StringToBase64Transformer(),
 			new Base64ToStringTransformer(),
 			new StringToJsonArrayTransformer(),
@@ -233,7 +232,36 @@ function registerConvertSelectionCommand(context: vscode.ExtensionContext) {
 		];
 
 		vscode.window.showQuickPick(transformers).then((transformer) => {
+			telemetry.log('Applying transformation.', {
+				transformer: typeof(transformer)
+			});
+			
 			processSelections(textEditor, edit, transformer);
+			
+			telemetry.log('Applied transformation.', {
+				transformer: typeof(transformer)
+			});
+		});
+}
+
+function registerConvertSelectionCommand(context: vscode.ExtensionContext) {
+	let convertSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.convertSelection', (textEditor, edit) => {
+		let telemetryOptions: string[] = [
+			'Yes, collect usage data to make this extension better.',
+			'No, don\'t collect usage data.'
+		];
+		
+		let configuration = vscode.workspace.getConfiguration('ecdc');
+		let collectTelmetry = configuration.get('ecdc.collectionTelemetry');
+		console.log('Config value is \'%s\'.', collectTelmetry);
+		
+		vscode.window.showQuickPick(telemetryOptions).then((selection) => {
+			if (selection.startsWith('Yes')) {
+				telemetry.enable();
+				selectAndApplyTransformation(textEditor, edit);
+			} else {
+				selectAndApplyTransformation(textEditor, edit);
+			}
 		});
 	});
 		
@@ -241,7 +269,5 @@ function registerConvertSelectionCommand(context: vscode.ExtensionContext) {
 }
 
 export function activate(context: vscode.ExtensionContext) {
-	telemetry.log('Extension activating.');
 	registerConvertSelectionCommand(context);
-	telemetry.log('Extension activated.');
 }
