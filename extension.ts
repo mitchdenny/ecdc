@@ -1,6 +1,7 @@
 import * as core from './lib/core';
 import * as crockford32 from './lib/crockford32';
 import * as htmlentities from './lib/htmlentities';
+import * as telemetry from './lib/telemetry';
 import * as vscode from 'vscode';
 import * as util from 'util';
 import * as crypto from 'crypto';
@@ -240,5 +241,7 @@ function registerConvertSelectionCommand(context: vscode.ExtensionContext) {
 }
 
 export function activate(context: vscode.ExtensionContext) {
+	telemetry.log('Extension activating.');
 	registerConvertSelectionCommand(context);
+	telemetry.log('Extension activated.');
 }

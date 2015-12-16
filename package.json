@@ -48,6 +48,7 @@
     "vscode": "0.10.x"
   },
   "dependencies": {
+    "applicationinsights": "^0.15.8",
     "encode32": "^1.1.0",
     "ent": "^2.2.0"
   }
