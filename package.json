@@ -35,7 +35,18 @@
         "command": "extension.convertSelection",
         "title": "Convert Selection"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Encode Decode Configuration",
+      "type": "object",
+      "properties": {
+        "ecdc.collectTelemetry": {
+          "type": "boolean",
+          "default": true,
+          "description": "Controls whether data is collected to make Encode Decode better."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
@@ -48,6 +59,7 @@
     "vscode": "0.10.x"
   },
   "dependencies": {
+    "applicationinsights": "^0.15.8",
     "encode32": "^1.1.0",
     "ent": "^2.2.0"
   }
