@@ -126,7 +126,14 @@ function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscod
 	];
 
 	vscode.window.showQuickPick(transformers).then((transformer) => {
-		telemetry.trackEvent(transformer.constructor.name, {}, {});
+		telemetry.trackEvent(
+			transformer.constructor.name,
+			{
+				nodeVersion: process.version,
+				platform: process.platform,
+				vscodeVersion: vscode.version
+			},
+			{});
 		processSelections(textEditor, edit, transformer);
 	});
 }
