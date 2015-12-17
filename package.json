@@ -38,8 +38,8 @@
     ],
     "keybindings": [{
         "command": "extension.convertSelection",
-        "key": "ctrl+shift-c",
-        "mac": "cmd+shift-c",
+        "key": "ctrl+alt-c",
+        "mac": "cmd+alt-c",
         "when": "editorTextFocus"
     }],
     "configuration": {
