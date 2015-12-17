@@ -126,15 +126,8 @@ function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscod
 	];
 
 	vscode.window.showQuickPick(transformers).then((transformer) => {
-		telemetry.log('Applying transformation.', {
-			transformer: transformer.constructor.name
-		});
-
+		telemetry.trackEvent(transformer.constructor.name, {}, {});
 		processSelections(textEditor, edit, transformer);
-
-		telemetry.log('Applied transformation.', {
-			transformer: transformer.constructor.name
-		});
 	});
 }
 

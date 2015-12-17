@@ -36,6 +36,12 @@
         "title": "Convert Selection"
       }
     ],
+    "keybindings": [{
+        "command": "extension.convertSelection",
+        "key": "ctrl+shift-c",
+        "mac": "cmd+shift-c",
+        "when": "editorTextFocus"
+    }],
     "configuration": {
       "title": "Encode Decode Configuration",
       "type": "object",
