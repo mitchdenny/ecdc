@@ -131,6 +131,7 @@ function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscod
 			{
 				nodeVersion: process.version,
 				platform: process.platform,
+				architecture: process.arch,
 				vscodeVersion: vscode.version
 			},
 			{});
