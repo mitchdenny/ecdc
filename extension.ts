@@ -134,7 +134,9 @@ function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscod
 				architecture: process.arch,
 				vscodeVersion: vscode.version
 			},
-			{});
+			{
+				selections: textEditor.selections.length
+			});
 		processSelections(textEditor, edit, transformer);
 	});
 }
