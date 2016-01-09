@@ -1,3 +1,5 @@
+[![build](https://mitchdenny.visualstudio.com/DefaultCollection/_apis/public/build/definitions/5322347e-5856-4473-92b1-8bd9fbaa9dfb/26/badge)](https://mitchdenny.visualstudio.com/DefaultCollection/ecdc/_build#_a=completed&definitionId=26)
+
 # ECDC
 
 The Encode/Decode (ecdc) extension allows you to quickly convert one or more selections of text to and from various formats. Supported conversions include:
