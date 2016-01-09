@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 
 export class StringToMD5Transformer implements core.Transformer {
 	public get label(): string {
-		return 'String to MD5 Hase (Base64 Encoded)';
+		return 'String to MD5 Hash (Base64 Encoded)';
 	}
 
 	public get description(): string {
