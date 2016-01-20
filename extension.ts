@@ -1,4 +1,5 @@
 import * as core from './lib/core';
+import * as urlEncode from './lib/urlEncode';
 import * as crockford32 from './lib/crockford32';
 import * as htmlentities from './lib/htmlentities';
 import * as base64 from './lib/base64';
@@ -122,7 +123,9 @@ function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscod
 		new htmlentities.StringToHtmlEntitiesTransformer(),
 		new htmlentities.HtmlEntitiesToStringTransformer(),
 		new crockford32.IntegerToCrockfordBase32Transformer(),
-		new crockford32.CrockfordBase32ToIntegerTransformer()
+		new crockford32.CrockfordBase32ToIntegerTransformer(),
+        new urlEncode.StringToEncodedUrlTransformer(),
+        new urlEncode.EncodedUrlToStringTransformer()
 	];
 
 	vscode.window.showQuickPick(transformers).then((transformer) => {
