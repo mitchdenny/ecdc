@@ -1,5 +1,6 @@
 import * as core from './lib/core';
 import * as urlEncode from './lib/urlEncode';
+import * as unicode from './lib/unicode';
 import * as crockford32 from './lib/crockford32';
 import * as htmlentities from './lib/htmlentities';
 import * as base64 from './lib/base64';
@@ -124,6 +125,8 @@ function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscod
 		new htmlentities.HtmlEntitiesToStringTransformer(),
 		new crockford32.IntegerToCrockfordBase32Transformer(),
 		new crockford32.CrockfordBase32ToIntegerTransformer(),
+        new unicode.StringToUnicodeTransformer(),
+        new unicode.UnicodeToStringTransformer(),
         new urlEncode.StringToEncodedUrlTransformer(),
         new urlEncode.EncodedUrlToStringTransformer()
 	];
