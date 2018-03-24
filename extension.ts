@@ -122,6 +122,7 @@ function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscod
 		new jsonarray.Base64ToJsonArrayTransformer(),
 		new md5.StringToMD5Transformer(),
 		new htmlentities.StringToHtmlEntitiesTransformer(),
+		new htmlentities.StringToHtmlDecimalEntitiesTransformer(),
 		new htmlentities.HtmlEntitiesToStringTransformer(),
 		new crockford32.IntegerToCrockfordBase32Transformer(),
 		new crockford32.CrockfordBase32ToIntegerTransformer(),

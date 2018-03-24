@@ -38,3 +38,22 @@ export class StringToHtmlEntitiesTransformer implements core.Transformer {
 		return output;
 	}
 }
+
+export class StringToHtmlDecimalEntitiesTransformer implements core.Transformer {
+	public get label(): string {
+		return 'String to HTML Entities (as Decimal Entity)';	
+	}
+	
+	public get description(): string {
+		return this.label;
+	}
+	
+	public check(input: string): boolean {
+		return true;
+	}
+	
+	public transform(input: string): string {
+		let output = ent.encode(input, { named: false });
+		return output;
+	}
+}
