@@ -64,7 +64,7 @@
 		"gulp": "^3.9.0",
 		"typescript": "^1.7.3",
 		"vsce": "^0.9.0",
-		"vscode": "0.10.x"
+		"vscode": "0.11.x"
 	},
 	"dependencies": {
 		"applicationinsights": "^0.15.8",
