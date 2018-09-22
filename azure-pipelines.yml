@@ -11,4 +11,4 @@ steps:
 
 - script: |
     npm install
-    vsce package
+    node_modules/.bin/vsce package
