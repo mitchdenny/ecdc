@@ -11,5 +11,4 @@ steps:
 
 - script: |
     npm install
-    gulp default --version 1.0.0
-  displayName: 'npm install and run gulp'
+    vsce package
