@@ -16,3 +16,8 @@ steps:
   displayName: Restore packages (npm ci)
 - script: node_modules/.bin/vsce package
   displayName: Create extension package
+- task: PublishPipelineArtifact@0
+  displayName: Publish VSIX artifact
+  inputs:
+    artifactName: drop
+    targetPath: $(Build.SourcesDirectory)
