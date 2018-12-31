@@ -14,13 +14,5 @@ steps:
   displayName: Audit packages (npm audit)
 - script: npm ci
   displayName: Restore packages (npm ci)
-- script: npm run compile
-  displayName: Compile scripts (npm run compile)
 - script: node_modules/.bin/vsce package
   displayName: Create extension package
-- task: PublishPipelineArtifact@0
-  displayName: Publish NPM logs
-  condition: always()
-  inputs:
-    artifactName: npm-logs
-    targetPath: /home/vsts/.npm/_logs
