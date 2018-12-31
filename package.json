@@ -61,10 +61,9 @@
 		"compile": "node ./node_modules/vscode/bin/compile -watch -p ./"
 	},
 	"devDependencies": {
-		"gulp": "^3.9.0",
-		"typescript": "^2.9.2",
-		"vsce": "^0.9.0",
-		"vscode": "0.11.x"
+		"typescript": "3.2.2",
+		"vsce": "1.54.0",
+		"vscode": "1.1.26"
 	},
 	"dependencies": {
 		"applicationinsights": "^1.0.4",
