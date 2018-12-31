@@ -1,5 +1,5 @@
 import * as core from './lib/core';
-import * as urlEncode from './lib/urlEncode';
+import * as urlEncode from './lib/urlencode';
 import * as unicode from './lib/unicode';
 import * as crockford32 from './lib/crockford32';
 import * as htmlentities from './lib/htmlentities';
