@@ -1,4 +1,3 @@
-import * as core from './core';
 import * as vscode from 'vscode';
 
 export interface Transformer extends vscode.QuickPickItem {

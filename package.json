@@ -11,7 +11,7 @@
 	],
 	"icon": "ecdc.png",
 	"engines": {
-		"vscode": "0.10.x"
+		"vscode": "^1.30.0"
 	},
 	"categories": [
 		"Other"
@@ -28,7 +28,7 @@
 	"activationEvents": [
 		"onCommand:extension.convertSelection"
 	],
-	"main": "./out/extension",
+	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
@@ -57,13 +57,19 @@
 		}
 	},
 	"scripts": {
-		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-		"compile": "node ./node_modules/vscode/bin/compile -watch -p ./"
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "npm run compile && node ./node_modules/vscode/bin/test"
 	},
 	"devDependencies": {
-		"typescript": "3.2.2",
-		"vsce": "1.54.0",
-		"vscode": "1.1.26"
+		"typescript": "^3.1.4",
+		"vscode": "^1.1.25",
+		"tslint": "^5.8.0",
+		"@types/node": "^8.10.25",
+		"@types/mocha": "^2.2.42",
+		"vsce": "1.54.0"
 	},
 	"dependencies": {
 		"applicationinsights": "^1.0.4",
