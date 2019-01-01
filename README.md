@@ -1,4 +1,4 @@
-[![build](https://mitchdenny.visualstudio.com/DefaultCollection/_apis/public/build/definitions/5322347e-5856-4473-92b1-8bd9fbaa9dfb/26/badge)](https://mitchdenny.visualstudio.com/DefaultCollection/ecdc/_build#_a=completed&definitionId=26)
+[![Build Status](https://dev.azure.com/mitchdenny/ecdc/_apis/build/status/ecdc?branchName=master)](https://dev.azure.com/mitchdenny/ecdc/_build/latest?definitionId=38?branchName=master)
 
 # ECDC
 
