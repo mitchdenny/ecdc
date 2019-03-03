@@ -3,6 +3,7 @@ import * as urlEncode from './lib/urlencode';
 import * as unicode from './lib/unicode';
 import * as crockford32 from './lib/crockford32';
 import * as htmlentities from './lib/htmlentities';
+import * as xmlentities from './lib/xmlentities';
 import * as base64 from './lib/base64';
 import * as md5 from './lib/md5';
 import * as jsonarray from './lib/jsonarray';
@@ -127,6 +128,8 @@ function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscod
 		new htmlentities.StringToHtmlEntitiesTransformer(),
 		new htmlentities.StringToHtmlDecimalEntitiesTransformer(),
 		new htmlentities.HtmlEntitiesToStringTransformer(),
+		new xmlentities.StringToXmlEntitiesTransformer(),
+		new xmlentities.XmlEntitiesToStringTransformer(),
 		new crockford32.IntegerToCrockfordBase32Transformer(),
 		new crockford32.CrockfordBase32ToIntegerTransformer(),
         new unicode.StringToUnicodeTransformer(),

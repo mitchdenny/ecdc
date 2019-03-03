@@ -75,6 +75,7 @@
 		"applicationinsights": "^1.0.4",
 		"encode32": "^1.1.0",
 		"ent": "^2.2.0",
+		"entities": "^1.1.2",
 		"unicode-escape": "^0.1.0"
 	}
 }
