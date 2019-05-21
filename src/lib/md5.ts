@@ -1,9 +1,12 @@
-import * as core from './core';
 import * as crypto from 'crypto';
+import * as core from './core';
 
-export class StringToMD5Transformer implements core.Transformer {
-	public get label(): string {
-		return 'String to MD5 Hash (Base64 Encoded)';
+abstract class StringToMD5Transformer implements core.Transformer {
+	protected abstract get digestMethodDescription(): string
+	protected abstract get digestMethod(): crypto.HexBase64Latin1Encoding
+
+	public  get label(): string {
+		return `String to MD5 Hash (${this.digestMethodDescription})`;
 	}
 
 	public get description(): string {
@@ -18,7 +21,27 @@ export class StringToMD5Transformer implements core.Transformer {
 		let hash = crypto.createHash('md5');
 		hash.update(input, 'utf8');
 
-		let output = hash.digest('base64');
+		let output = hash.digest(this.digestMethod);
 		return output;
+	}
+}
+
+export class StringToMD5Base64Transformer extends StringToMD5Transformer{
+	protected get digestMethodDescription(): string {
+		return "Base64 Encoded"
+	}
+
+	protected get digestMethod(): crypto.HexBase64Latin1Encoding {
+		return "base64"
+	}
+}
+
+export class StringToMD5HexTransformer extends StringToMD5Transformer {
+	protected get digestMethodDescription(): string {
+		return "Hex"
+	}
+
+	protected get digestMethod(): crypto.HexBase64Latin1Encoding {
+		return "hex"
 	}
 }

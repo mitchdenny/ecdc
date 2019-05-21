@@ -1,14 +1,14 @@
+import * as util from 'util';
+import * as vscode from 'vscode';
+import * as base64 from './lib/base64';
 import * as core from './lib/core';
-import * as urlEncode from './lib/urlencode';
-import * as unicode from './lib/unicode';
 import * as crockford32 from './lib/crockford32';
 import * as htmlentities from './lib/htmlentities';
-import * as xmlentities from './lib/xmlentities';
-import * as base64 from './lib/base64';
-import * as md5 from './lib/md5';
 import * as jsonarray from './lib/jsonarray';
-import * as vscode from 'vscode';
-import * as util from 'util';
+import * as md5 from './lib/md5';
+import * as unicode from './lib/unicode';
+import * as urlEncode from './lib/urlencode';
+import * as xmlentities from './lib/xmlentities';
 
 class Context {
 	public failedChanges: Change[] = [];
@@ -124,7 +124,8 @@ function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscod
 		new base64.Base64ToStringTransformer(),
 		new jsonarray.StringToJsonArrayTransformer(),
 		new jsonarray.Base64ToJsonArrayTransformer(),
-		new md5.StringToMD5Transformer(),
+		new md5.StringToMD5Base64Transformer(),
+		new md5.StringToMD5HexTransformer(),
 		new htmlentities.StringToHtmlEntitiesTransformer(),
 		new htmlentities.StringToHtmlDecimalEntitiesTransformer(),
 		new htmlentities.HtmlEntitiesToStringTransformer(),
