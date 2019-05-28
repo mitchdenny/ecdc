@@ -32,8 +32,12 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.convertSelection",
+				"command": "extension.legacyConvertSelection",
 				"title": "Convert Selection"
+			},
+			{
+				"command": "extension.convertSelection",
+				"title": "Encode/Decode: Convert Selection"
 			}
 		],
 		"keybindings": [
@@ -43,18 +47,7 @@
 				"mac": "cmd+alt-c",
 				"when": "editorTextFocus"
 			}
-		],
-		"configuration": {
-			"title": "Encode Decode Configuration",
-			"type": "object",
-			"properties": {
-				"ecdc.collectTelemetry": {
-					"type": "boolean",
-					"default": true,
-					"description": "Controls whether data is collected to make Encode Decode better."
-				}
-			}
-		}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
