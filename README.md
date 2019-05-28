@@ -1,4 +1,4 @@
-[![Build Status](https://dev.azure.com/mitchdenny/ecdc/_apis/build/status/ecdc?branchName=master)](https://dev.azure.com/mitchdenny/ecdc/_build/latest?definitionId=38?branchName=master)
+[![Build Status](https://dev.azure.com/mitchdenny/ecdc/_apis/build/status/mitchdenny.ecdc?branchName=master)](https://dev.azure.com/mitchdenny/ecdc/_build/latest?definitionId=2&branchName=master)
 
 # ECDC
 
