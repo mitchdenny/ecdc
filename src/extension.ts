@@ -146,14 +146,19 @@ function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscod
 	});
 }
 
-function registerConvertSelectionCommand(context: vscode.ExtensionContext) {
+function registerConvertSelectionCommands(context: vscode.ExtensionContext) {
+	let legacyConvertSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.legacyConvertSelection', (textEditor, edit) => {
+		selectAndApplyTransformation(textEditor, edit);
+	});
+
 	let convertSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.convertSelection', (textEditor, edit) => {
 		selectAndApplyTransformation(textEditor, edit);
 	});
 
+	context.subscriptions.push(legacyConvertSelectionDisposable);
 	context.subscriptions.push(convertSelectionDisposable);
 }
 
 export function activate(context: vscode.ExtensionContext) {
-	registerConvertSelectionCommand(context);
+	registerConvertSelectionCommands(context);
 }
