@@ -28,7 +28,7 @@ abstract class StringToMD5Transformer implements core.Transformer {
 
 export class StringToMD5Base64Transformer extends StringToMD5Transformer{
 	protected get digestMethodDescription(): string {
-		return "Base64 Encoded"
+		return "as Base64"
 	}
 
 	protected get digestMethod(): crypto.HexBase64Latin1Encoding {
@@ -38,7 +38,7 @@ export class StringToMD5Base64Transformer extends StringToMD5Transformer{
 
 export class StringToMD5HexTransformer extends StringToMD5Transformer {
 	protected get digestMethodDescription(): string {
-		return "Hex"
+		return "as Hex"
 	}
 
 	protected get digestMethod(): crypto.HexBase64Latin1Encoding {
