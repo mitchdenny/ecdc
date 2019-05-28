@@ -10,8 +10,6 @@ steps:
   displayName: Generate version number (git2semver)
 - script: npm version $GIT2SEMVER_MAJORMINORPATCH --no-git-tag-version
   displayName: Stamp version number (npm version)
-- script: npm audit
-  displayName: Audit packages (npm audit)
 - script: npm ci
   displayName: Restore packages (npm ci)
 - script: node_modules/.bin/vsce package
