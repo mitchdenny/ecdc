@@ -11,7 +11,7 @@ The Encode/Decode (ecdc) extension allows you to quickly convert one or more sel
 * String to MD5 Hash (as Base64 String)
 * String to HTML Entities
 * HTML Entities to String
-* String to XML Entities
+* String to XML Entities    
 * XML Entities to String
 * String to Unicode
 * Unicode to String
@@ -19,3 +19,10 @@ The Encode/Decode (ecdc) extension allows you to quickly convert one or more sel
 ## How to Use
 
 The extension provides a single command to the command palette. To active the command simply launch the command palette (`Shift-CMD-P` on OSX or `Shift-Ctrl-P` on Windows and Linux), then just type `Convert Selection`, then a menu of possible conversions will be displayed. Alternatively you can use the keyboard bindings CMD-ALT-C and CTRL-ALT-C for Mac & PC respectively.
+
+## Contributors
+
+Thanks to everyone who has submitted issues and pull requests, shout outs to:
+
+* jtanx
+* fcharron
