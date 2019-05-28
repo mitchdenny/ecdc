@@ -1,5 +1,4 @@
 import * as core from './core';
-import { escape } from 'querystring';
 
 export class StringToEncodedUrlTransformer implements core.Transformer {
 	public get label(): string {
@@ -15,7 +14,7 @@ export class StringToEncodedUrlTransformer implements core.Transformer {
 	}
 
 	public transform(input: string): string {
-		var output = escape(input);
+		const output = encodeURIComponent(input);
 
 		return output;
 	}
@@ -35,7 +34,7 @@ export class EncodedUrlToStringTransformer implements core.Transformer {
 	}
 
 	public transform(input: string): string {
-		var output = unescape(input);
+		const output = decodeURIComponent(input);
 
 		return output;
 	}
