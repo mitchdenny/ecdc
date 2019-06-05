@@ -148,7 +148,7 @@ function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscod
 }
 
 function registerConvertSelectionCommands(context: vscode.ExtensionContext) {
-	let legacyConvertSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.legacyConvertSelection', (textEditor, edit) => {
+	let subtleConvertSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.subtleConvertSelection', (textEditor, edit) => {
 		selectAndApplyTransformation(textEditor, edit);
 	});
 
@@ -156,7 +156,7 @@ function registerConvertSelectionCommands(context: vscode.ExtensionContext) {
 		selectAndApplyTransformation(textEditor, edit);
 	});
 
-	context.subscriptions.push(legacyConvertSelectionDisposable);
+	context.subscriptions.push(subtleConvertSelectionDisposable);
 	context.subscriptions.push(convertSelectionDisposable);
 }
 
