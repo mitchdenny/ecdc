@@ -26,13 +26,14 @@
 		"url": "https://github.com/mitchdenny/ecdc.git"
 	},
 	"activationEvents": [
-		"onCommand:extension.convertSelection"
+		"onCommand:extension.convertSelection",
+		"onCommand:extension.subtleConvertSelection"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.legacyConvertSelection",
+				"command": "extension.subtleConvertSelection",
 				"title": "Convert Selection"
 			},
 			{
@@ -47,7 +48,20 @@
 				"mac": "cmd+alt-c",
 				"when": "editorTextFocus"
 			}
-		]
+		],
+		"menus": {
+			"editor/context": [{
+				"command": "extension.subtleConvertSelection",
+				"when": "editorHasSelection",
+				"group": "1_modification"
+			}],
+			"commandPalette": [{
+				"command": "extension.convertSelection",
+				"when": "editorHasSelection",
+				"group": "1_modification"
+			}]
+
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
