@@ -3,7 +3,7 @@
 	"description": "An extension for Visual Studio Code that allows you to quickly convert text selections.",
 	"publisher": "mitchdenny",
 	"displayName": "Encode Decode",
-	"version": "0.11.0",
+	"version": "1.4.0",
 	"keywords": [
 		"encode",
 		"decode",
@@ -50,17 +50,20 @@
 			}
 		],
 		"menus": {
-			"editor/context": [{
-				"command": "extension.subtleConvertSelection",
-				"when": "editorHasSelection",
-				"group": "1_modification"
-			}],
-			"commandPalette": [{
-				"command": "extension.convertSelection",
-				"when": "editorHasSelection",
-				"group": "1_modification"
-			}]
-
+			"editor/context": [
+				{
+					"command": "extension.subtleConvertSelection",
+					"when": "editorHasSelection",
+					"group": "1_modification"
+				}
+			],
+			"commandPalette": [
+				{
+					"command": "extension.convertSelection",
+					"when": "editorHasSelection",
+					"group": "1_modification"
+				}
+			]
 		}
 	},
 	"scripts": {
@@ -81,7 +84,8 @@
 	"dependencies": {
 		"encode32": "^1.1.0",
 		"ent": "^2.2.0",
-		"entities": "^1.1.2",
+		"entities": "^2.1.0",
+		"html-entities": "2.0.2",
 		"unicode-escape": "^0.1.0"
 	}
 }
