@@ -16,6 +16,7 @@ The Encode/Decode (ecdc) extension allows you to quickly convert one or more sel
 * String to Unicode
 * Unicode to String
 
+
 ## How to Use
 
 The extension provides a single command to the command palette. To active the command simply launch the command palette (`Shift-CMD-P` on OSX or `Shift-Ctrl-P` on Windows and Linux), then just type `Encode/Decode: Convert Selection`, then a menu of possible conversions will be displayed. Alternatively you can use the keyboard bindings CMD-ALT-C and CTRL-ALT-C for Mac & PC respectively.
