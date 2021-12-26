@@ -136,7 +136,10 @@ function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscod
         new unicode.StringToUnicodeTransformer(),
         new unicode.UnicodeToStringTransformer(),
         new urlEncode.StringToEncodedUrlTransformer(),
-        new urlEncode.EncodedUrlToStringTransformer()
+		new urlEncode.EncodedUrlToStringTransformer(),
+		new urlEncode.StringToEncodedUrlComponentTransformer(),
+		new urlEncode.EncodedUrlComponentToStringTransformer(),
+		new urlEncode.StringToEncodedUrlAllCharsTransformer()
 	];
 
 	vscode.window.showQuickPick(transformers).then((transformer) => {

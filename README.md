@@ -11,10 +11,15 @@ The Encode/Decode (ecdc) extension allows you to quickly convert one or more sel
 * String to MD5 Hash (as Base64 or Hex)
 * String to HTML Entities
 * HTML Entities to String
-* String to XML Entities    
+* String to XML Entities
 * XML Entities to String
 * String to Unicode
 * Unicode to String
+* String to Encoded Url
+* Encoded Url to String
+* String to Encoded Url Component
+* Encoded Url Component to String
+* String to All Characters Encoded Url Component
 
 ## How to Use
 

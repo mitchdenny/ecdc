@@ -13,3 +13,6 @@ two > 1
 &amp
 'blabla'
 "blabla"
+
+http://example.com
+http://example.com/?api=тест
