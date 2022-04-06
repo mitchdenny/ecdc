@@ -4,7 +4,7 @@ import * as base64 from './lib/base64';
 import * as core from './lib/core';
 import * as crockford32 from './lib/crockford32';
 import * as htmlentities from './lib/htmlentities';
-import * as jsonarray from './lib/jsonarray';
+import * as json from './lib/json';
 import * as hash from './lib/hash';
 import * as unicode from './lib/unicode';
 import * as urlEncode from './lib/urlencode';
@@ -122,8 +122,10 @@ function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscod
 	let transformers: core.Transformer[] = [
 		new base64.StringToBase64Transformer(),
 		new base64.Base64ToStringTransformer(),
-		new jsonarray.StringToJsonArrayTransformer(),
-		new jsonarray.Base64ToJsonArrayTransformer(),
+		new json.StringToJsonArrayTransformer(),
+		new json.StringToJsonStringTransformer(),
+		new json.JsonStringToStringTransformer(),
+		new json.Base64ToJsonArrayTransformer(),
 		new hash.StringToMD5Base64Transformer(),
 		new hash.StringToMD5HexTransformer(),
 		new hash.StringToSHA1Base64Transformer(),
