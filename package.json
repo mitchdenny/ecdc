@@ -3,7 +3,7 @@
 	"description": "An extension for Visual Studio Code that allows you to quickly convert text selections.",
 	"publisher": "mitchdenny",
 	"displayName": "Encode Decode",
-	"version": "1.5.0",
+	"version": "1.6.0",
 	"keywords": [
 		"encode",
 		"decode",
