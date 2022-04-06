@@ -8,7 +8,7 @@ The Encode/Decode (ecdc) extension allows you to quickly convert one or more sel
 * Base 64 to String
 * String to JSON Byte Array
 * Base64 to JSON Byte Array
-* String to MD5 Hash (as Base64 or Hex)
+* String to MD5/SHA1/SHA256/SHA512 (as Base64 or Hex)
 * String to HTML Entities
 * HTML Entities to String
 * String to XML Entities    

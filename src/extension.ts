@@ -5,7 +5,7 @@ import * as core from './lib/core';
 import * as crockford32 from './lib/crockford32';
 import * as htmlentities from './lib/htmlentities';
 import * as jsonarray from './lib/jsonarray';
-import * as md5 from './lib/md5';
+import * as hash from './lib/hash';
 import * as unicode from './lib/unicode';
 import * as urlEncode from './lib/urlencode';
 import * as xmlentities from './lib/xmlentities';
@@ -124,8 +124,14 @@ function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscod
 		new base64.Base64ToStringTransformer(),
 		new jsonarray.StringToJsonArrayTransformer(),
 		new jsonarray.Base64ToJsonArrayTransformer(),
-		new md5.StringToMD5Base64Transformer(),
-		new md5.StringToMD5HexTransformer(),
+		new hash.StringToMD5Base64Transformer(),
+		new hash.StringToMD5HexTransformer(),
+		new hash.StringToSHA1Base64Transformer(),
+		new hash.StringToSHA1HexTransformer(),
+		new hash.StringToSHA256Base64Transformer(),
+		new hash.StringToSHA256HexTransformer(),
+		new hash.StringToSHA512Base64Transformer(),
+		new hash.StringToSHA512HexTransformer(),
 		new htmlentities.StringToHtmlEntitiesTransformer(),
 		new htmlentities.StringToHtmlDecimalEntitiesTransformer(),
 		new htmlentities.HtmlEntitiesToStringTransformer(),
