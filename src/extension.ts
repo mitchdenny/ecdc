@@ -9,6 +9,7 @@ import * as hash from './lib/hash';
 import * as unicode from './lib/unicode';
 import * as urlEncode from './lib/urlencode';
 import * as xmlentities from './lib/xmlentities';
+import * as yaml from './lib/yaml';
 
 class Context {
 	public failedChanges: Change[] = [];
@@ -144,7 +145,9 @@ function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscod
         new unicode.StringToUnicodeTransformer(),
         new unicode.UnicodeToStringTransformer(),
         new urlEncode.StringToEncodedUrlTransformer(),
-        new urlEncode.EncodedUrlToStringTransformer()
+        new urlEncode.EncodedUrlToStringTransformer(),
+        new yaml.JsonToYamlTransformer(),
+        new yaml.YamlToJsonTransformer()
 	];
 
 	vscode.window.showQuickPick(transformers).then((transformer) => {
