@@ -10,6 +10,7 @@ import * as unicode from './lib/unicode';
 import * as urlEncode from './lib/urlencode';
 import * as xmlentities from './lib/xmlentities';
 import * as yaml from './lib/yaml';
+import * as hex from './lib/hex';
 
 class Context {
 	public failedChanges: Change[] = [];
@@ -147,7 +148,8 @@ function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscod
         new urlEncode.StringToEncodedUrlTransformer(),
         new urlEncode.EncodedUrlToStringTransformer(),
         new yaml.JsonToYamlTransformer(),
-        new yaml.YamlToJsonTransformer()
+        new yaml.YamlToJsonTransformer(),
+		new hex.JsonByteArrayToHexStringTransformer()
 	];
 
 	vscode.window.showQuickPick(transformers).then((transformer) => {
