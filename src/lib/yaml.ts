@@ -1,5 +1,5 @@
 import * as core from './core';
-var yaml = require('js-yaml');
+const yaml = require('js-yaml');
 
 export class JsonToYamlTransformer implements core.Transformer {
 	public get label(): string {
@@ -15,8 +15,8 @@ export class JsonToYamlTransformer implements core.Transformer {
 	}
 
 	public transform(input: string): string {
-		let parsedInput = JSON.parse(input);
-		let output = yaml.dump(parsedInput);
+		const parsedInput = JSON.parse(input);
+		const output = yaml.dump(parsedInput);
 
 		return output;
 	}
@@ -36,8 +36,8 @@ export class YamlToJsonTransformer implements core.Transformer {
 	}
 
 	public transform(input: string): string {
-		var parsedInput = yaml.load(input);
-		let output = JSON.stringify(parsedInput);
+		const parsedInput = yaml.load(input);
+		const output = JSON.stringify(parsedInput);
 
 		return output;
 	}

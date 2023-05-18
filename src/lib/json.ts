@@ -14,9 +14,9 @@ export class StringToJsonArrayTransformer implements core.Transformer {
 	}
 
 	public transform(input: string): string {
-		let buffer = new Buffer(input, 'utf8');
-		let data = buffer.toJSON().data;
-		let output = JSON.stringify(data);
+		const buffer = Buffer.from(input, 'utf8');
+		const data = buffer.toJSON().data;
+		const output = JSON.stringify(data);
 
 		return output;
 	}
@@ -36,7 +36,7 @@ export class StringToJsonStringTransformer implements core.Transformer {
 	}
 
 	public transform(input: string): string {
-		let output = JSON.stringify(input);
+		const output = JSON.stringify(input);
 		return output;
 	}
 }
@@ -55,7 +55,7 @@ export class JsonStringToStringTransformer implements core.Transformer {
 	}
 
 	public transform(input: string): string {
-		let output = JSON.parse(input);
+		const output = JSON.parse(input);
 		return output;
 	}
 }
@@ -74,9 +74,9 @@ export class Base64ToJsonArrayTransformer implements core.Transformer {
 	}
 
 	public transform(input: string): string {
-		let buffer = new Buffer(input, 'base64');
-		let data = buffer.toJSON().data;
-		let output = JSON.stringify(data);
+		const buffer = Buffer.from(input, 'base64');
+		const data = buffer.toJSON().data;
+		const output = JSON.stringify(data);
 
 		return output;
 	}
