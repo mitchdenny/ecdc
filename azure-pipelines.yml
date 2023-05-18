@@ -15,7 +15,7 @@ steps:
 - task: NodeTool@0
   displayName: 'Install Node.js'
   inputs:
-    versionSpec: '10.x'
+    versionSpec: '18.x'
 - script: npx -q git2semver --formatter majorminorpatch-pipelines-variables-and-label
   displayName: Generate version number (git2semver)
 - script: npm version $GIT2SEMVER_MAJORMINORPATCH --no-git-tag-version
