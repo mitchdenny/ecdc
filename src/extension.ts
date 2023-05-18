@@ -10,6 +10,7 @@ import * as unicode from './lib/unicode';
 import * as urlEncode from './lib/urlencode';
 import * as xmlentities from './lib/xmlentities';
 import * as yaml from './lib/yaml';
+import * as jsonhex from './lib/jsonhex';
 import * as hex from './lib/hex';
 
 class Context {
@@ -61,11 +62,10 @@ class Change {
 	}
 
 	public updateSelection() {
-		if (this.updatedSelectionStartOffset != undefined && this.output != undefined)
-		{
+		if (this.updatedSelectionStartOffset != undefined && this.output != undefined) {
 			let updatedSelectionStart = this.textEditor.document.positionAt(this.updatedSelectionStartOffset);
 			let updatedSelectionEnd = this.textEditor.document.positionAt(this.updatedSelectionStartOffset + this.output.length);
-	
+
 			// Build and store the new selection.
 			this.updatedSelection = new vscode.Selection(updatedSelectionStart, updatedSelectionEnd);
 		}
@@ -124,6 +124,8 @@ function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscod
 	let transformers: core.Transformer[] = [
 		new base64.StringToBase64Transformer(),
 		new base64.Base64ToStringTransformer(),
+		new hex.StringToHexTransformer(),
+		new hex.HexToStringTransformer(),
 		new json.StringToJsonArrayTransformer(),
 		new json.StringToJsonStringTransformer(),
 		new json.JsonStringToStringTransformer(),
@@ -143,18 +145,17 @@ function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscod
 		new xmlentities.XmlEntitiesToStringTransformer(),
 		new crockford32.IntegerToCrockfordBase32Transformer(),
 		new crockford32.CrockfordBase32ToIntegerTransformer(),
-        new unicode.StringToUnicodeTransformer(),
-        new unicode.UnicodeToStringTransformer(),
-        new urlEncode.StringToEncodedUrlTransformer(),
-        new urlEncode.EncodedUrlToStringTransformer(),
-        new yaml.JsonToYamlTransformer(),
-        new yaml.YamlToJsonTransformer(),
-		new hex.JsonByteArrayToHexStringTransformer()
+		new unicode.StringToUnicodeTransformer(),
+		new unicode.UnicodeToStringTransformer(),
+		new urlEncode.StringToEncodedUrlTransformer(),
+		new urlEncode.EncodedUrlToStringTransformer(),
+		new yaml.JsonToYamlTransformer(),
+		new yaml.YamlToJsonTransformer(),
+		new jsonhex.JsonByteArrayToHexStringTransformer()
 	];
 
 	vscode.window.showQuickPick(transformers).then((transformer) => {
-		if (transformer != undefined)
-		{
+		if (transformer != undefined) {
 			processSelections(textEditor, edit, transformer);
 		}
 	});
