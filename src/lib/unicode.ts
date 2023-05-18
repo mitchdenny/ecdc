@@ -1,5 +1,5 @@
 import * as core from './core';
-var escape = require('unicode-escape');
+const escape = require('unicode-escape');
 
 export class StringToUnicodeTransformer implements core.Transformer {
 	public get label(): string {

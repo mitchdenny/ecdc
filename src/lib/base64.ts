@@ -14,8 +14,8 @@ export class StringToBase64Transformer implements core.Transformer {
 	}
 
 	public transform(input: string): string {
-		var buffer = new Buffer(input);
-		var output = buffer.toString('base64');
+		const buffer = Buffer.from(input);
+		const output = buffer.toString('base64');
 
 		return output;
 	}
@@ -35,8 +35,8 @@ export class Base64ToStringTransformer implements core.Transformer {
 	}
 
 	public transform(input: string): string {
-		var buffer = new Buffer(input, 'base64');
-		var output = buffer.toString('utf8');
+		const buffer = Buffer.from(input, 'base64');
+		const output = buffer.toString('utf8');
 
 		return output;
 	}

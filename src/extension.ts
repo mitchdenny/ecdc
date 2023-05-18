@@ -20,14 +20,14 @@ class Change {
 	private textEditor: vscode.TextEditor;
 	private transformer: core.Transformer;
 	private originalOffset: number;
-	private updatedSelectionStartOffset: number = -1;
-	private inputOutputLengthDelta: number = -1;
+	private updatedSelectionStartOffset = -1;
+	private inputOutputLengthDelta = -1;
 
 	public originalSelection: vscode.Selection;
 	public updatedSelection: vscode.Selection;
-	public updatedOffset: number = -1;
-	public input: string = "";
-	public output: string = ""
+	public updatedOffset = -1;
+	public input = "";
+	public output = "";
 
 	constructor(textEditor: vscode.TextEditor, originalSelection: vscode.Selection, transformer: core.Transformer, originalOffset: number) {
 		this.textEditor = textEditor;
@@ -38,13 +38,13 @@ class Change {
 	}
 
 	public transformText(context: Context, edit: vscode.TextEditorEdit) {
-		let originalSelectionStartOffset = this.textEditor.document.offsetAt(this.originalSelection.start);
+		const originalSelectionStartOffset = this.textEditor.document.offsetAt(this.originalSelection.start);
 		//let originalSelectionEndOffset = this.textEditor.document.offsetAt(this.originalSelection.end);
 		//let originalSelectionLength = originalSelectionEndOffset - originalSelectionStartOffset;
 
 		this.updatedSelectionStartOffset = originalSelectionStartOffset + this.originalOffset;
 
-		let range = new vscode.Range(this.originalSelection.start, this.originalSelection.end);
+		const range = new vscode.Range(this.originalSelection.start, this.originalSelection.end);
 		this.input = this.textEditor.document.getText(range);
 
 		if (this.transformer.check(this.input) == true) {
@@ -61,11 +61,10 @@ class Change {
 	}
 
 	public updateSelection() {
-		if (this.updatedSelectionStartOffset != undefined && this.output != undefined)
-		{
-			let updatedSelectionStart = this.textEditor.document.positionAt(this.updatedSelectionStartOffset);
-			let updatedSelectionEnd = this.textEditor.document.positionAt(this.updatedSelectionStartOffset + this.output.length);
-	
+		if (this.updatedSelectionStartOffset != undefined && this.output != undefined) {
+			const updatedSelectionStart = this.textEditor.document.positionAt(this.updatedSelectionStartOffset);
+			const updatedSelectionEnd = this.textEditor.document.positionAt(this.updatedSelectionStartOffset + this.output.length);
+
 			// Build and store the new selection.
 			this.updatedSelection = new vscode.Selection(updatedSelectionStart, updatedSelectionEnd);
 		}
@@ -74,21 +73,21 @@ class Change {
 
 function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit, transformer: core.Transformer) {
 	// let document = textEditor.document;
-	let changes: Change[] = [];
-	let updatedSelections: vscode.Selection[] = [];
-	let context = new Context();
+	const changes: Change[] = [];
+	const updatedSelections: vscode.Selection[] = [];
+	const context = new Context();
 
 	textEditor.edit((editBuilder) => {
 		for (let selectionIndex = 0; selectionIndex < textEditor.selections.length; selectionIndex++) {
-			let selection = textEditor.selections[selectionIndex];
+			const selection = textEditor.selections[selectionIndex];
 
 			let offset = 0;
 			if (selectionIndex != 0) {
-				let previousChange = changes[selectionIndex - 1];
+				const previousChange = changes[selectionIndex - 1];
 				offset = previousChange.updatedOffset;
 			}
 
-			let change = new Change(
+			const change = new Change(
 				textEditor,
 				selection,
 				transformer,
@@ -102,7 +101,7 @@ function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEdito
 	}).then(() => {
 		for (let changeIndex = 0; changeIndex < changes.length; changeIndex++) {
 
-			let change = changes[changeIndex];
+			const change = changes[changeIndex];
 			change.updateSelection();
 			updatedSelections.push(change.updatedSelection);
 		}
@@ -110,7 +109,7 @@ function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEdito
 		textEditor.selections = updatedSelections;
 	}).then(() => {
 		if (context.failedChanges.length != 0) {
-			let message = util.format(
+			const message = util.format(
 				'%s selections could not be processed.',
 				context.failedChanges.length
 			);
@@ -121,13 +120,9 @@ function processSelections(textEditor: vscode.TextEditor, edit: vscode.TextEdito
 }
 
 function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit) {
-	let transformers: core.Transformer[] = [
+	const transformers: core.Transformer[] = [
 		new base64.StringToBase64Transformer(),
 		new base64.Base64ToStringTransformer(),
-		new json.StringToJsonArrayTransformer(),
-		new json.StringToJsonStringTransformer(),
-		new json.JsonStringToStringTransformer(),
-		new json.Base64ToJsonArrayTransformer(),
 		new hash.StringToMD5Base64Transformer(),
 		new hash.StringToMD5HexTransformer(),
 		new hash.StringToSHA1Base64Transformer(),
@@ -143,29 +138,32 @@ function selectAndApplyTransformation(textEditor: vscode.TextEditor, edit: vscod
 		new xmlentities.XmlEntitiesToStringTransformer(),
 		new crockford32.IntegerToCrockfordBase32Transformer(),
 		new crockford32.CrockfordBase32ToIntegerTransformer(),
-        new unicode.StringToUnicodeTransformer(),
-        new unicode.UnicodeToStringTransformer(),
-        new urlEncode.StringToEncodedUrlTransformer(),
-        new urlEncode.EncodedUrlToStringTransformer(),
-        new yaml.JsonToYamlTransformer(),
-        new yaml.YamlToJsonTransformer(),
+		new unicode.StringToUnicodeTransformer(),
+		new unicode.UnicodeToStringTransformer(),
+		new urlEncode.StringToEncodedUrlTransformer(),
+		new urlEncode.EncodedUrlToStringTransformer(),
+		new yaml.JsonToYamlTransformer(),
+		new yaml.YamlToJsonTransformer(),
+		new json.StringToJsonArrayTransformer(),
+		new json.StringToJsonStringTransformer(),
+		new json.JsonStringToStringTransformer(),
+		new json.Base64ToJsonArrayTransformer(),
 		new hex.JsonByteArrayToHexStringTransformer()
 	];
 
 	vscode.window.showQuickPick(transformers).then((transformer) => {
-		if (transformer != undefined)
-		{
+		if (transformer != undefined) {
 			processSelections(textEditor, edit, transformer);
 		}
 	});
 }
 
 function registerConvertSelectionCommands(context: vscode.ExtensionContext) {
-	let subtleConvertSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.subtleConvertSelection', (textEditor, edit) => {
+	const subtleConvertSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.subtleConvertSelection', (textEditor, edit) => {
 		selectAndApplyTransformation(textEditor, edit);
 	});
 
-	let convertSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.convertSelection', (textEditor, edit) => {
+	const convertSelectionDisposable = vscode.commands.registerTextEditorCommand('extension.convertSelection', (textEditor, edit) => {
 		selectAndApplyTransformation(textEditor, edit);
 	});
 
